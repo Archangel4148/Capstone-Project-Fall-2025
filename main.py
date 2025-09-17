@@ -7,14 +7,14 @@ TIMER_STEP_MS = 10  # 0.01 second accuracy
 
 
 class TimerWindow(QWidget):
-    def __init__(self):
+    def __init__(self, default_start_time: float = 0.0):
         super().__init__()
         self.ui = Ui_TimerWindow()
         self.ui.setupUi(self)
 
         # Default initial display value
-        self.start_time = 0.0
-        self.timer_value = 0.0
+        self.timer_value = self.start_time = default_start_time
+        self.ui.start_time_line_edit.setText(str(round(default_start_time, 2)))
         self.update_display()
 
         # State flags for button tracking
@@ -112,6 +112,6 @@ class TimerWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication([])
-    main_window = TimerWindow()
+    main_window = TimerWindow(default_start_time=90)
     main_window.show()
     app.exec_()
