@@ -33,12 +33,14 @@ class TimerWindow(QWidget):
 
     @staticmethod
     def format_time(seconds: float) -> str:
+        # Format the time as MM:SS.HH
         minutes = int(seconds // 60)
         secs = int(seconds % 60)
         hundredths = int((seconds * 100) % 100)
         return f"{minutes:02d}:{secs:02d}.{hundredths:02d}"
 
     def update_display(self):
+        # Update the timer display with the text formatted time
         self.ui.timer_label.setText(self.format_time(self.timer_value))
 
     def start_stop_timer(self):
@@ -101,6 +103,7 @@ class TimerWindow(QWidget):
     def timer_finished(self):
         print("TIMER FINISHED")
         self.timer.stop()
+        # Wait 1 second before resetting the timer (aesthetic)
         QTimer.singleShot(1000, self.reset_timer)
 
     def reset_timer(self):
@@ -111,7 +114,12 @@ class TimerWindow(QWidget):
 
 
 if __name__ == '__main__':
+    # Create the application (required)
     app = QApplication([])
+
+    # Create and show the timer window
     main_window = TimerWindow(default_start_time=90)
     main_window.show()
+
+    # Execute the app (required)
     app.exec_()
