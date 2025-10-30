@@ -1,15 +1,15 @@
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QWidget, QApplication
 
-from ui.timer_window_init import Ui_TimerWindow
+from ui.main_window_init import Ui_main_window
 
 TIMER_STEP_MS = 10  # 0.01 second accuracy
 
 
-class TimerWindow(QWidget):
+class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
         super().__init__()
-        self.ui = Ui_TimerWindow()
+        self.ui = Ui_main_window()
         self.ui.setupUi(self)
 
         # Default initial display value
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     app = QApplication([])
 
     # Create and show the timer window
-    main_window = TimerWindow(default_start_time=90)
+    main_window = MainWindow(default_start_time=90)
     main_window.show()
 
     # Execute the app (required)
