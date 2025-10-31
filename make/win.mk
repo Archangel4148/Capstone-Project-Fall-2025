@@ -10,7 +10,7 @@ clean: # remove generated files
 compile: # compile program
 	mkdir -force bin >$$NULL
 	-robocopy.exe src bin /e /njh /njs /xf *.ui
-	mv -force bin\\main.py bin\\nudgy.py
+	mv -force bin\\main.py bin\\nudgy.pyw
 
 compile-ui: # compile ui
 	foreach ($$f in (ls -filter *.ui -recurse src)) {$$f = $$f.fullname -replace ".{$$($$f.extension.length)}$$"; pyuic5.exe -o "$${f}_init.py" "$$f.ui"}
@@ -21,4 +21,4 @@ release: compile # compile and compress program
 	mv releases\\main.tar.gz "releases\\main-$$(([datetimeoffset](date)).tounixtimeseconds()).tar.gz"
 
 run: compile # compile and run program
-	bin\\nudgy.py
+	bin\\nudgy.pyw
