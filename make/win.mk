@@ -13,9 +13,7 @@ compile: # compile program
 	mv -force bin\\main.py bin\\nudgy.py
 
 compile-ui: # compile ui
-	for f in $$(find src -name '*.ui' | sed 's/\.[^\/]*$$//g'); do \
-		pyuic5.exe -o "$${f}_init.py" "$$f.ui"; \
-	done
+	foreach ($$f in (ls -filter *.ui -recurse src)) {$$f = $$f.fullname -replace ".{$$($$f.extension.length)}$$"; pyuic5.exe -o "$${f}_init.py" "$$f.ui"}
 
 # release: compile # compile and compress program
 # 	-md releases
