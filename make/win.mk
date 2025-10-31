@@ -15,10 +15,10 @@ compile: # compile program
 compile-ui: # compile ui
 	foreach ($$f in (ls -filter *.ui -recurse src)) {$$f = $$f.fullname -replace ".{$$($$f.extension.length)}$$"; pyuic5.exe -o "$${f}_init.py" "$$f.ui"}
 
-# release: compile # compile and compress program
-# 	-md releases
-# 	tar.exe -c -f releases\\main.tar.gz bin
-# 	mv releases/main.tar.gz "releases/main-$$(date +%s).tar.gz"
+release: compile # compile and compress program
+	mkdir -force releases >$$NULL
+	tar.exe -c -f releases\\main.tar.gz bin
+	mv releases\\main.tar.gz "releases\\main-$$(([datetimeoffset](date)).tounixtimeseconds()).tar.gz"
 
-# run: compile # compile and run program
-# 	bin\\nudgy.py
+run: compile # compile and run program
+	bin\\nudgy.py
