@@ -1,5 +1,6 @@
 bin/
 Pipfile
 Pipfile.lock
+releases/
 __pycache__/
 .idea/
