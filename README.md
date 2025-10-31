@@ -14,6 +14,3 @@ If you have ideas for releases in the future, it is a good idea to list them in 
 * Ryan Brazill
 * Sarah Stamper
 * Simon Edmunds
-
-## License
-For open source projects, say how it is licensed.
