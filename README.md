@@ -23,6 +23,9 @@ See [Building](README.md#building).
 * [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5)
 * [Python 3](https://www.python.org)
 
+#### Compiling
+1. Run `make.exe compile`. Builds will appear in the `bin` directory.
+
 ## Roadmap
 [Jira - Capstone 1 Project](https://cs4090group30.atlassian.net/jira/software/projects/KAN/boards/1)
 
