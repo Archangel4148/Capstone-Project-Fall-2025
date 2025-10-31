@@ -5,17 +5,17 @@ help: # print this help and exit
 	@select-string -casesensitive '^[a-z]' make\\win.mk | foreach {$$_.line -replace ':[^:#]*#\s+', "`t"}
 
 clean: # remove generated files
-	rm -recurse bin, releases
+	-rm -erroraction silentlycontinue -recurse bin, releases
 
 compile: # compile program
 	mkdir -force bin >$$NULL
-	robocopy.exe src bin /e /njh /njs /xf *.ui
-	mv bin\\main.py bin\\nudgy.py
+	-robocopy.exe src bin /e /njh /njs /xf *.ui
+	mv -force bin\\main.py bin\\nudgy.py
 
-# compile-ui: # compile ui
-# 	for f in $$(find src -name '*.ui' | sed 's/\.[^\/]*$$//g'); do \
-# 		pyuic5.exe -o "$${f}_init.py" "$$f.ui"; \
-# 	done
+compile-ui: # compile ui
+	for f in $$(find src -name '*.ui' | sed 's/\.[^\/]*$$//g'); do \
+		pyuic5.exe -o "$${f}_init.py" "$$f.ui"; \
+	done
 
 # release: compile # compile and compress program
 # 	-md releases
