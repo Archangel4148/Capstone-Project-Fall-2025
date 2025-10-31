@@ -1,8 +1,8 @@
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QTabWidget
 
-from src.tabs.base_tab import BaseNudgyTab
-from src.ui.timer_tab_init import Ui_timer_tab
+from tabs.base_tab import BaseNudgyTab
+from ui.timer_tab_init import Ui_timer_tab
 
 
 class TimerTab(BaseNudgyTab):

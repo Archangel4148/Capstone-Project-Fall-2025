@@ -1,5 +1,5 @@
-from src.tabs.base_tab import BaseNudgyTab
-from src.ui.calendar_tab_init import Ui_calendar_tab
+from tabs.base_tab import BaseNudgyTab
+from ui.calendar_tab_init import Ui_calendar_tab
 
 
 class CalendarTab(BaseNudgyTab):
