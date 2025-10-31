@@ -23,9 +23,6 @@ See [Building](README.md#building).
 * [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5)
 * [Python 3](https://www.python.org)
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
 ## Roadmap
 [Jira - Capstone 1 Project](https://cs4090group30.atlassian.net/jira/software/projects/KAN/boards/1)
 
