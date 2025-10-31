@@ -10,5 +10,10 @@ compile: # compile program
 	chmod +x bin/main.py
 	mv bin/main.py bin/nudgy
 
+compile-ui: # compile ui
+	for f in $$(find src -name '*.ui' | sed 's/\.[^\/]*$$//g'); do \
+		pyuic5 -o "$${f}_init.py" "$$f.ui"; \
+	done
+
 run: compile # compile and run program
 	bin/nudgy
