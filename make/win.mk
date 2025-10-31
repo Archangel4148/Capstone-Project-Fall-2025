@@ -2,7 +2,7 @@ IFS = .
 SHELL = powershell.exe
 
 help: # print this help and exit
-	@select-string -casesensitive '^[a-z]' make\\win.mk | foreach {$$_.line -replace ':[^:#]*#\s+', "`t"}
+	@select-string -casesensitive '^[a-z]' make\\win.mk | foreach {$$_.line -replace ':[^:#]*#\s+', "`t "}
 
 clean: # remove generated files
 	-rm -erroraction silentlycontinue -recurse bin, releases

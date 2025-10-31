@@ -1,5 +1,5 @@
 help: # print this help and exit
-	@grep -E '^[a-zA-Z]' make/unix.mk | sed -E 's/:.*#\s*/\t/g' | grep -Ev '^\s*[a-zA-Z]+:\s*[a-zA-Z]+$$' | sort
+	@grep -E '^[a-zA-Z]' make/unix.mk | sed -E 's/:.*#\s*/\t /g' | grep -Ev '^\s*[a-zA-Z]+:\s*[a-zA-Z]+$$' | sort
 
 clean: # remove generated files
 	-rm -r bin releases
