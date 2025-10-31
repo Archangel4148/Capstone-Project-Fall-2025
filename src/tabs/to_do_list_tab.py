@@ -1,5 +1,5 @@
-from src.tabs.base_tab import BaseNudgyTab
-from src.ui.to_do_tab_init import Ui_to_do_tab
+from tabs.base_tab import BaseNudgyTab
+from ui.to_do_tab_init import Ui_to_do_tab
 
 
 class ToDoListTab(BaseNudgyTab):

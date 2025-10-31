@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-
 from PyQt5.QtWidgets import QWidget, QApplication
 
-from src.tabs.calendar_tab import CalendarTab
-from src.tabs.screen_time_tab import ScreenTimeTab
-from src.tabs.timer_tab import TimerTab
-from src.tabs.to_do_list_tab import ToDoListTab
+from tabs.calendar_tab import CalendarTab
+from tabs.screen_time_tab import ScreenTimeTab
+from tabs.timer_tab import TimerTab
+from tabs.to_do_list_tab import ToDoListTab
 from ui.main_window_init import Ui_main_window
 
 
