@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TimerWindow</class>
- <widget class="QWidget" name="TimerWindow">
+ <class>timer_tab</class>
+ <widget class="QWidget" name="timer_tab">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>536</width>
-    <height>462</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Timer Tab</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="5,1">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0">
    <item>
     <widget class="QLabel" name="timer_label">
      <property name="font">
@@ -30,7 +30,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,2,0">
+    <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="2,2,0">
      <item>
       <widget class="QPushButton" name="start_stop_button">
        <property name="minimumSize">
