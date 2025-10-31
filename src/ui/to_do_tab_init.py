@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\to_do_tab.ui'
+# Form implementation generated from reading ui file 'to_do_tab.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -44,7 +44,6 @@ class Ui_to_do_tab(object):
         self.horizontalLayout_4.addWidget(self.remove_task_button)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.horizontalLayout.addLayout(self.verticalLayout)
-
 
         self.retranslateUi(to_do_tab)
         QtCore.QMetaObject.connectSlotsByName(to_do_tab)
