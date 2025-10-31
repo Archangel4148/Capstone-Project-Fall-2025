@@ -36,22 +36,14 @@ class Ui_to_do_tab(object):
         self.due_date_time_edit = QtWidgets.QDateTimeEdit(to_do_tab)
         self.due_date_time_edit.setObjectName("due_date_time_edit")
         self.horizontalLayout_4.addWidget(self.due_date_time_edit)
-        self.add_task_button = QtWidgets.QPushButton(to_do_tab, clicked=lambda: addItem(self))
+        self.add_task_button = QtWidgets.QPushButton(to_do_tab)
         self.add_task_button.setObjectName("add_task_button")
         self.horizontalLayout_4.addWidget(self.add_task_button)
-        self.remove_task_button = QtWidgets.QPushButton(to_do_tab, clicked=lambda: deleteItem(self))
+        self.remove_task_button = QtWidgets.QPushButton(to_do_tab)
         self.remove_task_button.setObjectName("remove_task_button")
         self.horizontalLayout_4.addWidget(self.remove_task_button)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.horizontalLayout.addLayout(self.verticalLayout)
-
-        def addItem(self):
-            item = self.task_description_line_edit.text() + ' Due: ' + self.due_date_time_edit.text()
-            self.listWidget.addItem(item)
-
-        def deleteItem(self):
-            clicked = self.listWidget.currentRow()
-            self.listWidget.takeItem(clicked)
 
 
         self.retranslateUi(to_do_tab)
