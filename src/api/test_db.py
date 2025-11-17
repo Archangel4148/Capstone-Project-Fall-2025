@@ -4,7 +4,7 @@ def main():
 
     print("Running database test...")
 
-    # 2. Create table
+    # Create table
     DatabaseService.create_table(
         "students",
         {
@@ -16,7 +16,7 @@ def main():
     )
     print("Created table (or verified it exists).")
 
-    # 3. Insert demo row
+    # Insert demo row
     DatabaseService.insert(
         "students",
         {
@@ -27,13 +27,13 @@ def main():
     )
     print("Inserted row.")
 
-    # 4. Select
+    # Select
     rows = DatabaseService.select("students", ["id", "name", "grade", "on_probation"], None)
     print("All rows:")
     for row in rows:
         print(row)
 
-    # 5. Update
+    # Update
     DatabaseService.update(
         "students",
         {"on_probation": True},
@@ -41,17 +41,17 @@ def main():
     )
     print("Updated rows.")
 
-    # 6. Select again
+    # Select again
     rows = DatabaseService.select("students", ["name", "on_probation"], None)
     print("Rows after update:")
     for row in rows:
         print(row)
 
-    # 7. Delete
+    # Delete
     DatabaseService.delete("students", [("name", "=", "Simon Edmunds")])
     print("Deleted row.")
 
-    # 8. Final check
+    # Final check
     rows = DatabaseService.select("students", None, None)
     print("Final rows:")
     print(rows)
