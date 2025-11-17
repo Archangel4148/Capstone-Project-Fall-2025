@@ -4,5 +4,4 @@ Pipfile.lock
 releases/
 __pycache__/
 .idea/
-*.env
 *.db
