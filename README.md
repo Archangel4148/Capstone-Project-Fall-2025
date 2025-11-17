@@ -4,6 +4,10 @@ This is Nudgy, an application meant to help you stay on track and get your work 
 ## Installation
 See [Building](README.md#building).
 
+Nudgy uses a PostgreSQL database.  
+
+To keep database credentials **out of the repository**, we use a local `.env` file that is never committed. See `src/api/config.example.env` for a template. To connect to the database, make a copy of the template, naming it `.env`, and filling in your PostgreSQL details.
+
 ## Building
 ### Linux
 #### Dependencies
