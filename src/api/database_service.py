@@ -1,13 +1,32 @@
-QUERY_PLACEHOLDER = "?"  # This will depend on the database we use
+import psycopg
+
+QUERY_PLACEHOLDER = "%s"  # This is defined by PostgreSQL
 
 
 class DatabaseService:
-    DB_PATH = None  # Path to the database (this might have to change, idk how APIs work lol)
+    CONNECTION_INFO = {
+        "dbname": None,
+        "user": None,
+        "password": None,
+        "host": "localhost",
+        "port": 5432
+    }
+
+    @classmethod
+    def login_to_database(cls, dbname, user, password, host="localhost", port=5432):
+        """Call this once during app startup."""
+        cls.CONNECTION_INFO.update({
+            "dbname": dbname,
+            "user": user,
+            "password": password,
+            "host": host,
+            "port": port
+        })
 
     @classmethod
     def connect(cls):
-        """Connect to the database, returning the connection object"""
-        raise NotImplementedError()
+        """Uses details from cls.CONNECTION_INFO to connect to the database, returning the connection object"""
+        raise psycopg.connect(**cls.CONNECTION_INFO)
 
     @classmethod
     def execute(cls, query: str, parameters: list | tuple = None):
@@ -22,7 +41,8 @@ class DatabaseService:
         Example:
             DatabaseService.execute("INSERT INTO students (name, grade) VALUES (?, ?)", ["Simon Edmunds", 95])
         """
-        raise NotImplementedError()
+
+
 
     @classmethod
     def create_table(cls, table_name: str, columns: dict, if_not_exists: bool = True):
