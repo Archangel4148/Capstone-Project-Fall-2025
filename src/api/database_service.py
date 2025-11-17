@@ -1,35 +1,30 @@
+import os
+from dotenv import load_dotenv
+
 import psycopg
+from psycopg.rows import Row
 
 QUERY_PLACEHOLDER = "%s"  # This is defined by PostgreSQL
 
+# Load login info from the .env file (to prevent us from pushing login stuff)
+load_dotenv()
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST"),
+    "port": os.getenv("DB_PORT"),
+    "dbname": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+}
 
 class DatabaseService:
-    CONNECTION_INFO = {
-        "dbname": None,
-        "user": None,
-        "password": None,
-        "host": "localhost",
-        "port": 5432
-    }
+    @classmethod
+    def connect(cls) -> psycopg.connection.Connection:
+        """Uses details from DB_CONFIG to connect to the database, returning the connection object"""
+        # Connect to the database using the configured connection info
+        return psycopg.connect(**DB_CONFIG)
 
     @classmethod
-    def login_to_database(cls, dbname, user, password, host="localhost", port=5432):
-        """Call this once during app startup."""
-        cls.CONNECTION_INFO.update({
-            "dbname": dbname,
-            "user": user,
-            "password": password,
-            "host": host,
-            "port": port
-        })
-
-    @classmethod
-    def connect(cls):
-        """Uses details from cls.CONNECTION_INFO to connect to the database, returning the connection object"""
-        raise psycopg.connect(**cls.CONNECTION_INFO)
-
-    @classmethod
-    def execute(cls, query: str, parameters: list | tuple = None):
+    def execute(cls, query: str, parameters: list | tuple = None) -> list[Row] | None:
         """
         Executes an SQL query on the database, returning any results from the database
 
@@ -41,8 +36,16 @@ class DatabaseService:
         Example:
             DatabaseService.execute("INSERT INTO students (name, grade) VALUES (?, ?)", ["Simon Edmunds", 95])
         """
+        with cls.connect() as connection:
+            # Execute the SQL query, using parameters to prevent SQL injection
+            cursor = connection.execute(query, parameters or [])
 
+            # If the cursor returned any data, return it
+            if cursor.description:
+                return cursor.fetchall()
 
+            # Otherwise, return None
+            return None
 
     @classmethod
     def create_table(cls, table_name: str, columns: dict, if_not_exists: bool = True):
