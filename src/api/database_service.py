@@ -1,30 +1,16 @@
-import os
-from dotenv import load_dotenv
+import sqlite3
 
-import psycopg
-from psycopg.rows import Row
+QUERY_PLACEHOLDER = "?"  # This is defined by SQLite
 
-QUERY_PLACEHOLDER = "%s"  # This is defined by PostgreSQL
-
-# Load login info from the .env file (to prevent us from pushing login stuff)
-load_dotenv()
-DB_CONFIG = {
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT"),
-    "dbname": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-}
 
 class DatabaseService:
     @classmethod
-    def connect(cls) -> psycopg.connection.Connection:
-        """Uses details from DB_CONFIG to connect to the database, returning the connection object"""
-        # Connect to the database using the configured connection info
-        return psycopg.connect(**DB_CONFIG)
+    def connect(cls) -> sqlite3.Connection:
+        """Connects to the database, returning the connection object"""
+        return sqlite3.connect("nudgy_database.db")
 
     @classmethod
-    def execute(cls, query: str, parameters: list | tuple = None) -> list[Row] | None:
+    def execute(cls, query: str, parameters: list | tuple = None) -> list | None:
         """
         Executes an SQL query on the database, returning any results from the database
 
