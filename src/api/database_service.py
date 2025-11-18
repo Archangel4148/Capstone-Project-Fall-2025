@@ -133,17 +133,10 @@ class DatabaseService:
         # Base query
         query = f"UPDATE {table_name} SET {set_command}"
 
-        # Conditions
-        if conditions:
-            condition_strings = []
-            for key, operator, value in conditions:
-                # Add the condition to be checked (using placeholders for values)
-                condition_strings.append(f"{key} {operator} {QUERY_PLACEHOLDER}")
-                # Add the value to the query parameters
-                parameters.append(value)
+        condition_suffix, parameters = build_condition_suffix(conditions)
 
-            # Add the conditions to the query
-            query += " WHERE " + " AND ".join(condition_strings)
+        # Add the conditions to the query
+        query += " WHERE " + condition_suffix
 
         # Execute the query, returning the result
         return cls.execute(query, parameters)
@@ -176,19 +169,11 @@ class DatabaseService:
 
         # Build the base query and prepare for parameters
         query = f"SELECT {columns} FROM {table_name}"
-        parameters = []
 
-        # Conditions
-        if conditions:
-            condition_strings = []
-            for key, operator, value in conditions:
-                # Add the condition to be checked (using placeholders for values)
-                condition_strings.append(f"{key} {operator} {QUERY_PLACEHOLDER}")
-                # Add the value to the query parameters
-                parameters.append(value)
+        condition_suffix, parameters = build_condition_suffix(conditions)
 
-            # Add the conditions to the query
-            query += " WHERE " + " AND ".join(condition_strings)
+        # Add the conditions to the query
+        query += " WHERE " + condition_suffix
 
         # Execute the query, returning the result
         return cls.execute(query, parameters)
@@ -212,19 +197,30 @@ class DatabaseService:
 
         # Base query
         query = f"DELETE FROM {table_name}"
-        parameters = []
+        condition_suffix, parameters = build_condition_suffix(conditions)
 
-        # Conditions
-        if conditions:
-            condition_strings = []
-            for key, operator, value in conditions:
-                # Add the condition to be checked (using placeholders for values)
-                condition_strings.append(f"{key} {operator} {QUERY_PLACEHOLDER}")
-                # Add the value to the query parameters
-                parameters.append(value)
-
-            # Add the conditions to the query
-            query += " WHERE " + " AND ".join(condition_strings)
+        # Add the conditions to the query
+        query += condition_suffix
 
         # Execute the query, returning the result
         return cls.execute(query, parameters)
+
+
+def build_condition_suffix(conditions: list[tuple]) -> tuple[str, list]:
+    """
+    Builds an SQL-style suffix for conditions in a query, returning the parameters along with a suffix of the form:
+    ' WHERE {condition1} AND {condition2} AND {condition3}'
+    """
+    parameters = []
+    # Conditions
+    if conditions:
+        condition_strings = []
+        for key, operator, value in conditions:
+            # Add the condition to be checked (using placeholders for values)
+            condition_strings.append(f"{key} {operator} {QUERY_PLACEHOLDER}")
+            # Add the value to the query parameters
+            parameters.append(value)
+        # Return the condition suffix along with the required parameters
+        return " WHERE " + " AND ".join(condition_strings), parameters
+    else:
+        return "", []
