@@ -24,8 +24,6 @@ class DatabaseService:
         """
         with cls.connect() as connection:
             # Execute the SQL query, using parameters to prevent SQL injection
-            print(query)
-            print(parameters)
             cursor = connection.execute(query, parameters or [])
 
             # If the cursor returned any data, return it
