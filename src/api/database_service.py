@@ -1,3 +1,4 @@
+import re
 import sqlite3
 
 QUERY_PLACEHOLDER = "?"  # This is defined by SQLite
@@ -61,6 +62,9 @@ class DatabaseService:
             }
         )
         """
+        validate_table_name(table_name)
+        validate_cols(columns)
+
         if not columns:
             raise ValueError("No columns provided for table creation")
 
@@ -83,6 +87,9 @@ class DatabaseService:
         Example:
         DatabaseService.insert("students", {"name": "Simon Edmunds", "grade": 41, "on_probation": "False"})
         """
+        validate_table_name(table_name)
+        validate_cols(list(values.keys()))
+
         # Comma-separated list of column names
         keys = ", ".join(values.keys())
 
@@ -115,6 +122,9 @@ class DatabaseService:
         )
         (Updates "on_probation" to "True" for all matching rows.)
         """
+        validate_table_name(table_name)
+        validate_cols(list(values.keys()))
+        validate_conditions(conditions)
 
         if not values:
             raise ValueError("No values provided for update")
@@ -161,6 +171,8 @@ class DatabaseService:
         )
         (Returns name and grade for all seniors.)
         """
+        validate_table_name(table_name)
+        validate_cols(columns)
 
         # Build the list of columns (or use wildcard if None or empty)
         columns = ", ".join(columns) if columns else "*"
@@ -193,6 +205,8 @@ class DatabaseService:
         )
         (Deletes all rows where 'graduated' is True.)
         """
+        validate_table_name(table_name)
+        validate_conditions(conditions)
 
         # Base query
         query = f"DELETE FROM {table_name}"
@@ -223,3 +237,26 @@ def build_condition_suffix(conditions: list[tuple]) -> tuple[str, list]:
         return " WHERE " + " AND ".join(condition_strings), parameters
     else:
         return "", []
+
+def validate_table_name(table_name: str) -> None:
+    if re.fullmatch("^([0-9A-Za-z_])*$", table_name) == None:
+        raise ValueError("Invalid query")
+
+def validate_cols(cols: list[str]) -> None:
+    if cols == None:
+        return
+
+    for c in cols:
+        if re.fullmatch("^([0-9A-Za-z_])*$", c) == None:
+            raise ValueError("Invalid query")
+
+def validate_conditions(conditions: list[tuple]) -> None:
+    if conditions == None:
+        return
+
+    for c in conditions:
+        column = c[0]
+        operator = c[1]
+
+        if re.fullmatch("^([0-9A-Za-z_])*$", column) == None or not operator in ("=", ">", "<", ">=", "<=", "<>"):
+            raise ValueError("Invalid query")
