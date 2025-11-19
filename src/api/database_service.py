@@ -136,9 +136,7 @@ class DatabaseService:
         query = f"UPDATE {table_name} SET {set_command}"
 
         condition_suffix, parameters = build_condition_suffix(conditions)
-
         # Add the conditions to the query
-        query += " WHERE " + condition_suffix
 
         # Execute the query, returning the result
         return cls.execute(query, parameters)
