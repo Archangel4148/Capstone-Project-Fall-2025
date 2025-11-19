@@ -24,6 +24,8 @@ class DatabaseService:
         """
         with cls.connect() as connection:
             # Execute the SQL query, using parameters to prevent SQL injection
+            print(query)
+            print(parameters)
             cursor = connection.execute(query, parameters or [])
 
             # If the cursor returned any data, return it
@@ -173,7 +175,8 @@ class DatabaseService:
         condition_suffix, parameters = build_condition_suffix(conditions)
 
         # Add the conditions to the query
-        query += " WHERE " + condition_suffix
+        if condition_suffix != "":
+            query += " WHERE " + condition_suffix
 
         # Execute the query, returning the result
         return cls.execute(query, parameters)

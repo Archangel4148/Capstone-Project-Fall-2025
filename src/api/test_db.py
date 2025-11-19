@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from database_service import DatabaseService
 
 def main():
