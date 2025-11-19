@@ -35,7 +35,7 @@ class DatabaseService:
             return None
 
     @classmethod
-    def create_table(cls, table_name: str, columns: dict, if_not_exists: bool = True):
+    def create_table(cls, table_name: str, columns: dict, if_not_exists: bool = True) -> list | None:
         """
         Creates a table named {table_name} with the given columns.
 
@@ -80,7 +80,7 @@ class DatabaseService:
         return cls.execute(query)
 
     @classmethod
-    def insert(cls, table_name: str, values: dict):
+    def insert(cls, table_name: str, values: dict) -> list | None:
         """
         Inserts a row into table {table_name} with column values {values}
         (Values should be structured like  {column_name}: {data_to_be_stored})
@@ -106,7 +106,7 @@ class DatabaseService:
         return cls.execute(query, parameters)
 
     @classmethod
-    def update(cls, table_name: str, values: dict, conditions: list[tuple] | None):
+    def update(cls, table_name: str, values: dict, conditions: list[tuple] | None) -> list | None:
         """
         Updates values in table {table_name} for rows that meet all conditions.
 
@@ -150,7 +150,7 @@ class DatabaseService:
         return cls.execute(query, parameters)
 
     @classmethod
-    def select(cls, table_name: str, columns: list[str] | None, conditions: list[tuple] | None):
+    def select(cls, table_name: str, columns: list[str] | None, conditions: list[tuple] | None) -> list | None:
         """
         Selects data from table {table_name}.
 
@@ -190,7 +190,7 @@ class DatabaseService:
         return cls.execute(query, parameters)
 
     @classmethod
-    def delete(cls, table_name: str, conditions: list[tuple] | None):
+    def delete(cls, table_name: str, conditions: list[tuple] | None) -> list | None:
         """
         Deletes rows from {table_name} where all conditions are met.
 
