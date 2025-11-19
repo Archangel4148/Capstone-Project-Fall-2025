@@ -239,10 +239,20 @@ def build_condition_suffix(conditions: list[tuple]) -> tuple[str, list]:
         return "", []
 
 def validate_table_name(table_name: str) -> None:
+    """
+    If table_name is invalid, throws a ValueError.
+    Valid is considered to be alphanumeric, including underscores.
+    """
+
     if re.fullmatch("^([0-9A-Za-z_])*$", table_name) == None:
         raise ValueError("Invalid query")
 
 def validate_cols(cols: list[str]) -> None:
+    """
+    If any column is invalid, throws a ValueError. If cols == None, then returns.
+    Valid is considered to be alphanumeric, including underscores.
+    """
+
     if cols == None:
         return
 
@@ -251,6 +261,11 @@ def validate_cols(cols: list[str]) -> None:
             raise ValueError("Invalid query")
 
 def validate_conditions(conditions: list[tuple]) -> None:
+    """
+    If any column is invalid, throws a ValueError. If conditions == None, then returns.
+    Valid is considered to be alphanumeric, including underscores.
+    """
+
     if conditions == None:
         return
 
