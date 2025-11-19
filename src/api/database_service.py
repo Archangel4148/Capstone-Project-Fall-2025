@@ -24,14 +24,11 @@ class DatabaseService:
             DatabaseService.execute("INSERT INTO students (name, grade) VALUES (?, ?)", ["Simon Edmunds", 95])
         """
         with cls.connect() as connection:
-            # Execute the SQL query, using parameters to prevent SQL injection
             cursor = connection.execute(query, parameters or [])
 
-            # If the cursor returned any data, return it
             if cursor.description:
                 return cursor.fetchall()
 
-            # Otherwise, return None
             return None
 
     @classmethod
@@ -68,15 +65,11 @@ class DatabaseService:
         if not columns:
             raise ValueError("No columns provided for table creation")
 
-        # Build the column definitions from the provided column data
         column_definitions = ", ".join(f"{column} {data_type}" for column, data_type in columns.items())
-
         if_not_exists_section = "IF NOT EXISTS" if if_not_exists else ""
 
-        # Build the full query
         query = f"CREATE TABLE {if_not_exists_section} {table_name} ({column_definitions})"
 
-        # Execute the query, returning the result
         return cls.execute(query)
 
     @classmethod
@@ -90,19 +83,12 @@ class DatabaseService:
         validate_table_name(table_name)
         validate_cols(list(values.keys()))
 
-        # Comma-separated list of column names
         keys = ", ".join(values.keys())
-
-        # Comma-separated list of placeholders (places for values to be applied once the query is evaluated)
         placeholders = ", ".join([QUERY_PLACEHOLDER] * len(values))
 
-        # Build the SQL query to insert the row (using placeholders to prevent SQL injection)
         query = f"INSERT INTO {table_name} ({keys}) VALUES ({placeholders})"
-
-        # Get the actual provided values
         parameters = list(values.values())
 
-        # Execute the query, returning the result
         return cls.execute(query, parameters)
 
     @classmethod
@@ -129,24 +115,18 @@ class DatabaseService:
         if not values:
             raise ValueError("No values provided for update")
 
-        # Build the SET query
         set_strings = []
         parameters = []
         for key, value in values.items():
-            # Build the SET strings (using parameters for values)
             set_strings.append(f"{key} = {QUERY_PLACEHOLDER}")
             parameters.append(value)
 
-        # Combine the set strings into a single clause
         set_command = ", ".join(set_strings)
 
-        # Base query
         query = f"UPDATE {table_name} SET {set_command}"
 
         condition_suffix, parameters = build_condition_suffix(conditions)
-        # Add the conditions to the query
 
-        # Execute the query, returning the result
         return cls.execute(query, parameters)
 
     @classmethod
@@ -174,19 +154,15 @@ class DatabaseService:
         validate_table_name(table_name)
         validate_cols(columns)
 
-        # Build the list of columns (or use wildcard if None or empty)
         columns = ", ".join(columns) if columns else "*"
 
-        # Build the base query and prepare for parameters
         query = f"SELECT {columns} FROM {table_name}"
 
         condition_suffix, parameters = build_condition_suffix(conditions)
 
-        # Add the conditions to the query
         if condition_suffix != "":
             query += " WHERE " + condition_suffix
 
-        # Execute the query, returning the result
         return cls.execute(query, parameters)
 
     @classmethod
@@ -208,14 +184,11 @@ class DatabaseService:
         validate_table_name(table_name)
         validate_conditions(conditions)
 
-        # Base query
         query = f"DELETE FROM {table_name}"
         condition_suffix, parameters = build_condition_suffix(conditions)
 
-        # Add the conditions to the query
         query += condition_suffix
 
-        # Execute the query, returning the result
         return cls.execute(query, parameters)
 
 
@@ -225,15 +198,12 @@ def build_condition_suffix(conditions: list[tuple]) -> tuple[str, list]:
     ' WHERE {condition1} AND {condition2} AND {condition3}'
     """
     parameters = []
-    # Conditions
     if conditions:
         condition_strings = []
         for key, operator, value in conditions:
-            # Add the condition to be checked (using placeholders for values)
             condition_strings.append(f"{key} {operator} {QUERY_PLACEHOLDER}")
-            # Add the value to the query parameters
             parameters.append(value)
-        # Return the condition suffix along with the required parameters
+
         return " WHERE " + " AND ".join(condition_strings), parameters
     else:
         return "", []
