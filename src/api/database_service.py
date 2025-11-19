@@ -32,7 +32,7 @@ class DatabaseService:
             return None
 
     @classmethod
-    def create_table(cls, table_name: str, columns: dict, if_not_exists: bool = True) -> list | None:
+    def create_table(cls, table_name: str, columns: dict, force: bool = False) -> list | None:
         """
         Creates a table named {table_name} with the given columns.
 
@@ -45,8 +45,8 @@ class DatabaseService:
                     "age": "INTEGER",
                     "gpa": "REAL"
                 }
-        if_not_exists:
-            When True, suppresses exist errors (only creates the new table if it doesn't exist).
+        force:
+            When False, suppresses exist errors (only creates the new table if it doesn't exist).
 
         Example:
         DatabaseService.create_table(
@@ -66,7 +66,7 @@ class DatabaseService:
             raise ValueError("No columns provided for table creation")
 
         column_definitions = ", ".join(f"{column} {data_type}" for column, data_type in columns.items())
-        if_not_exists_section = "IF NOT EXISTS" if if_not_exists else ""
+        if_not_exists_section = "IF NOT EXISTS" if not force else ""
 
         query = f"CREATE TABLE {if_not_exists_section} {table_name} ({column_definitions})"
 
