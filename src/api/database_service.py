@@ -116,16 +116,17 @@ class DatabaseService:
             raise ValueError("No values provided for update")
 
         set_strings = []
-        parameters = []
+        set_params = []
         for key, value in values.items():
             set_strings.append(f"{key} = {QUERY_PLACEHOLDER}")
-            parameters.append(value)
+            set_params.append(value)
 
         set_command = ", ".join(set_strings)
 
-        query = f"UPDATE {table_name} SET {set_command}"
+        condition_suffix, condition_params = build_condition_suffix(conditions)
+        query = f"UPDATE {table_name} SET {set_command}{condition_suffix}"
 
-        condition_suffix, parameters = build_condition_suffix(conditions)
+        parameters = set_params + condition_params
 
         return cls.execute(query, parameters)
 
@@ -156,12 +157,8 @@ class DatabaseService:
 
         columns = ", ".join(columns) if columns else "*"
 
-        query = f"SELECT {columns} FROM {table_name}"
-
         condition_suffix, parameters = build_condition_suffix(conditions)
-
-        if condition_suffix != "":
-            query += " WHERE " + condition_suffix
+        query = f"SELECT {columns} FROM {table_name}{condition_suffix}"
 
         return cls.execute(query, parameters)
 
@@ -184,10 +181,8 @@ class DatabaseService:
         validate_table_name(table_name)
         validate_conditions(conditions)
 
-        query = f"DELETE FROM {table_name}"
         condition_suffix, parameters = build_condition_suffix(conditions)
-
-        query += condition_suffix
+        query = f"DELETE FROM {table_name}{condition_suffix}"
 
         return cls.execute(query, parameters)
 
@@ -214,34 +209,34 @@ def validate_table_name(table_name: str) -> None:
     Valid is considered to be alphanumeric, including underscores.
     """
 
-    if re.fullmatch("^([0-9A-Za-z_])*$", table_name) == None:
+    if re.fullmatch("^([0-9A-Za-z_])*$", table_name) is None:
         raise ValueError("Invalid query")
 
 def validate_cols(cols: list[str]) -> None:
     """
-    If any column is invalid, throws a ValueError. If cols == None, then returns.
+    If any column is invalid, throws a ValueError. If cols is None, then returns.
     Valid is considered to be alphanumeric, including underscores.
     """
 
-    if cols == None:
+    if cols is None:
         return
 
     for c in cols:
-        if re.fullmatch("^([0-9A-Za-z_])*$", c) == None:
+        if re.fullmatch("^([0-9A-Za-z_])*$", c) is None:
             raise ValueError("Invalid query")
 
 def validate_conditions(conditions: list[tuple]) -> None:
     """
-    If any column is invalid, throws a ValueError. If conditions == None, then returns.
+    If any column is invalid, throws a ValueError. If conditions is None, then returns.
     Valid is considered to be alphanumeric, including underscores.
     """
 
-    if conditions == None:
+    if conditions is None:
         return
 
     for c in conditions:
         column = c[0]
         operator = c[1]
 
-        if re.fullmatch("^([0-9A-Za-z_])*$", column) == None or not operator in ("=", ">", "<", ">=", "<=", "<>"):
+        if re.fullmatch("^([0-9A-Za-z_])*$", column) is None or not operator in ("=", ">", "<", ">=", "<=", "<>"):
             raise ValueError("Invalid query")
