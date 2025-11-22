@@ -4,12 +4,15 @@ This is Nudgy, an application meant to help you stay on track and get your work 
 ## Installation
 See [Building](README.md#building).
 
+Nudgy uses a SQLite database, stored locally in `nudgy_database.db`.
+
 ## Building
 ### Linux
 #### Dependencies
 * [Coreutils](https://www.gnu.org/software/coreutils)
 * [Make](https://www.gnu.org/software/make)
 * [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5)
+* [SQLite](https://sqlite.org/)
 * [Python 3](https://www.python.org)
 * [rsync](https://rsync.samba.org)
 * [Tar](https://www.gnu.org/software/tar)
@@ -22,6 +25,7 @@ See [Building](README.md#building).
 * [Make](https://www.gnu.org/software/make)
 * [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5)
 * [Python 3](https://www.python.org)
+* [SQLite](https://sqlite.org/)
 
 #### Compiling
 1. Run `make.exe compile`. Builds will appear in the `bin` directory.
