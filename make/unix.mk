@@ -21,4 +21,4 @@ release: compile # compile and compress program
 	mv releases/main.tar.gz "releases/main-$$(date +%s).tar.gz"
 
 run: compile # compile and run program
-	bin/api/test_db.py
+	bin/nudgy
