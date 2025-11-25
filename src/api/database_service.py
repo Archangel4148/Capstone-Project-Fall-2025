@@ -28,8 +28,7 @@ class DatabaseService:
             "screen_time",
             {
                 "application_path": "TEXT",
-                "usage_time": "INTEGER",
-                "query_timestamp": "TEXT",
+                "query_timestamp": "INTEGER",
             }
         )
         cls.create_table(

@@ -14,10 +14,10 @@ class TimerTabAPI:
         return timers
 
 
-    def delete_timer(self, selected_timer: Timer):
+    def delete_timer(self, selected_timer: Timer) -> None:
         # Delete the selected timer from the database
         DatabaseService.delete(table_name="timer", conditions=[("timer_id", "=", selected_timer.duration_sec)])
 
-    def add_timer(self, timer: Timer):
+    def add_timer(self, timer: Timer) -> None:
         # Add the provided Timer to the database
         DatabaseService.insert(table_name="timer", values={"duration": timer.duration_sec})
