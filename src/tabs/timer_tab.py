@@ -121,7 +121,6 @@ class TimerTab(BaseNudgyTab):
 
 @dataclasses.dataclass
 class Timer:
-    id: int
     duration_sec: float
 
 class TimerTabAPI:
@@ -129,14 +128,14 @@ class TimerTabAPI:
         # Select all rows from the database
         rows = DatabaseService.select(table_name="timer", columns=None, conditions=None)
         # Build the Timer objects
-        timers = [Timer(*row) for row in rows]        
+        timers = [Timer(*row) for row in rows]
         return timers
 
 
     def delete_timer(self, selected_timer: Timer):
         # Delete the selected timer from the database
-        DatabaseService.delete(table_name="timer", conditions=[("timer_id", "=", selected_timer.id)])
+        DatabaseService.delete(table_name="timer", conditions=[("timer_id", "=", selected_timer.duration_sec)])
 
     def add_timer(self, timer: Timer):
         # Add the provided Timer to the database
-        DatabaseService.insert(table_name="timer", values={"timer_id": timer.id, "duration": timer.duration_sec})
+        DatabaseService.insert(table_name="timer", values={"duration": timer.duration_sec})

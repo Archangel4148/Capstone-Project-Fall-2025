@@ -44,7 +44,6 @@ class DatabaseService:
         cls.create_table(
             "timer",
             {
-                "timer_id": "INTEGER PRIMARY KEY",
                 "duration": "INTEGER",
             }
         )
