@@ -9,10 +9,10 @@ class DatabaseService:
     def connect(cls) -> sqlite3.Connection:
         """Connects to the database, returning the connection object"""
         return sqlite3.connect("nudgy_database.db")
-    
+
     @classmethod
     def initialize(cls):
-        DatabaseService.create_table(
+        cls.create_table(
             "calendar",
             {
                 "calendar_item_id": "INTEGER PRIMARY KEY",
@@ -24,16 +24,15 @@ class DatabaseService:
                 "has_reminder": "INTEGER",
             }
         )
-        DatabaseService.create_table(
+        cls.create_table(
             "screen_time",
             {
-                "app_usage_id": "INTEGER PRIMARY KEY",
-                "application_name": "TEXT",
+                "application_path": "TEXT",
                 "usage_time": "INTEGER",
                 "query_timestamp": "TEXT",
             }
         )
-        DatabaseService.create_table(
+        cls.create_table(
             "to_do_list",
             {
                 "task_id": "INTEGER PRIMARY KEY",
@@ -42,14 +41,14 @@ class DatabaseService:
                 "include_calendar_item": "INTEGER",
             }
         )
-        DatabaseService.create_table(
+        cls.create_table(
             "timer",
             {
                 "timer_id": "INTEGER PRIMARY KEY",
                 "duration": "INTEGER",
             }
         )
-        DatabaseService.create_table(
+        cls.create_table(
             "event_map",
             {
                 "event_id": "INTEGER",
@@ -199,7 +198,7 @@ class DatabaseService:
             ["name", "grade"],
             [("academic_level", "=", "senior")]
         )
-        
+
         This method returns a list of all rows. Each row is represented as a tuple of values for each selected column
         """
         validate_table_name(table_name)
