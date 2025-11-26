@@ -11,6 +11,52 @@ class DatabaseService:
         return sqlite3.connect("nudgy_database.db")
 
     @classmethod
+    def initialize(cls):
+        cls.create_table(
+            "calendar",
+            {
+                "calendar_item_id": "INTEGER PRIMARY KEY",
+                "datetime": "TEXT",
+                "event_name": "TEXT",
+                "event_description": "TEXT",
+                "duration": "INTEGER",
+                "include_to_do_task": "INTEGER",
+                "has_reminder": "INTEGER",
+            }
+        )
+        cls.create_table(
+            "screen_time",
+            {
+                "application_path": "TEXT",
+                "query_timestamp": "INTEGER",
+            }
+        )
+        cls.create_table(
+            "to_do_list",
+            {
+                "task_id": "INTEGER PRIMARY KEY",
+                "description": "TEXT",
+                "due_date": "TEXT",
+                "include_calendar_item": "INTEGER",
+            }
+        )
+        cls.create_table(
+            "timer",
+            {
+                "duration": "INTEGER",
+            }
+        )
+        cls.create_table(
+            "event_map",
+            {
+                "event_id": "INTEGER",
+                "to_do_item_id": "INTEGER",
+                "calendar_item_id": "INTEGER",
+            }
+        )
+
+
+    @classmethod
     def execute(cls, query: str, parameters: list | tuple = None) -> list | None:
         """
         Executes an SQL query on the database, returning any results from the database
@@ -150,7 +196,8 @@ class DatabaseService:
             ["name", "grade"],
             [("academic_level", "=", "senior")]
         )
-        (Returns name and grade for all seniors.)
+
+        This method returns a list of all rows. Each row is represented as a tuple of values for each selected column
         """
         validate_table_name(table_name)
         validate_cols(columns)

@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QTabWidget
 
+from api.timer import TimerTabAPI
 from tabs.base_tab import BaseNudgyTab
 from ui.timer_tab_init import Ui_timer_tab
 
@@ -13,6 +14,9 @@ class TimerTab(BaseNudgyTab):
 
     def __init__(self, parent_tab_widget: QTabWidget, default_start_time: float = 0.0):
         super().__init__(parent_tab_widget)
+
+        # Create the API endpoint
+        self.api = TimerTabAPI()
 
         # Default initial display value
         self.timer_value = self.start_time = default_start_time
