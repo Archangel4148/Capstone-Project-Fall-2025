@@ -20,7 +20,8 @@ def get_active_window_linux() -> str:
     encoding = chardet.detect(proc)["encoding"]
     proc = str(proc, encoding=encoding).strip()
 
-
+    proc = int(proc)
+    print(psutil.Process(proc).exe())
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
