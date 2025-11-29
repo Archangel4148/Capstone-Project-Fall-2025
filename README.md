@@ -12,10 +12,11 @@ Nudgy uses a SQLite database, stored locally in `nudgy_database.db`.
 * [Coreutils](https://www.gnu.org/software/coreutils)
 * [Make](https://www.gnu.org/software/make)
 * [PyQt5](https://www.riverbankcomputing.com/static/Docs/PyQt5)
-* [SQLite](https://sqlite.org/)
 * [Python 3](https://www.python.org)
 * [rsync](https://rsync.samba.org)
+* [SQLite](https://sqlite.org)
 * [Tar](https://www.gnu.org/software/tar)
+* [xdotool](https://github.com/jordansissel/xdotool)
 
 #### Compiling
 1. Run `make compile`. Builds will appear in the `bin` directory.

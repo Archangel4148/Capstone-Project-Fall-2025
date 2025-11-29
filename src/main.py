@@ -7,6 +7,19 @@ from tabs.screen_time_tab import ScreenTimeTab
 from tabs.timer_tab import TimerTab
 from tabs.to_do_list_tab import ToDoListTab
 from ui.main_window_init import Ui_main_window
+import chardet
+import psutil
+import subprocess
+
+def get_active_window_linux() -> str:
+    proc = subprocess.Popen(["xdotool", "getactivewindow"], stdout=subprocess.PIPE).stdout.read()
+    encoding = chardet.detect(proc)["encoding"]
+    proc = str(proc, encoding=encoding).strip()
+
+    proc = subprocess.Popen(["xdotool", "getwindowpid", proc], stdout=subprocess.PIPE).stdout.read()
+    encoding = chardet.detect(proc)["encoding"]
+    proc = str(proc, encoding=encoding).strip()
+
 
 
 class MainWindow(QWidget):
@@ -26,11 +39,12 @@ class MainWindow(QWidget):
 
 if __name__ == '__main__':
     # Create the application (required)
-    app = QApplication([])
+    # app = QApplication([])
 
     # Create and show the main window
-    main_window = MainWindow(default_start_time=90)
-    main_window.show()
+    # main_window = MainWindow(default_start_time=90)
+    # main_window.show()
 
     # Execute the app (required)
-    app.exec_()
+    # app.exec_()
+    get_active_window_linux()
