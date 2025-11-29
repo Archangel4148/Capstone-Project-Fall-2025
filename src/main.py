@@ -7,7 +7,7 @@ from tabs.screen_time_tab import ScreenTimeTab
 from tabs.timer_tab import TimerTab
 from tabs.to_do_list_tab import ToDoListTab
 from ui.main_window_init import Ui_main_window
-import chardet
+# import chardet
 import os
 import psutil
 import subprocess
@@ -25,6 +25,9 @@ def get_active_window_linux_x11() -> str:
     proc = int(proc)
     path = psutil.Process(proc).exe()
     return os.path.realpath(path)
+
+def get_active_window_windows_nt() -> str:
+    pass
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
@@ -51,4 +54,4 @@ if __name__ == '__main__':
 
     # Execute the app (required)
     # app.exec_()
-    print(get_active_window_linux_x11())
+    print(get_active_window_windows_nt())
