@@ -12,7 +12,8 @@ import os
 import psutil
 import subprocess
 
-def get_active_window_linux() -> str:
+def get_active_window_linux_x11() -> str:
+    # doesn't support wayland since there isn't a consistent method for doing so that's also supported by multiple compositors.
     proc = subprocess.Popen(["xdotool", "getactivewindow"], stdout=subprocess.PIPE).stdout.read()
     encoding = chardet.detect(proc)["encoding"]
     proc = str(proc, encoding=encoding).strip()
@@ -50,4 +51,4 @@ if __name__ == '__main__':
 
     # Execute the app (required)
     # app.exec_()
-    print(get_active_window_linux())
+    print(get_active_window_linux_x11())
