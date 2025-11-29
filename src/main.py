@@ -11,6 +11,7 @@ from ui.main_window_init import Ui_main_window
 import os
 import psutil
 import subprocess
+import win32api
 import win32gui
 import win32process
 
@@ -34,6 +35,19 @@ def get_active_window_windows_nt() -> str:
 
     path = psutil.Process(pid).exe()
     return os.path.realpath(path)
+
+def get_exe_name_windows_nt(exe_path: str) -> str:
+    try:
+        language, codepage = win32api.GetFileVersionInfo(exe_path, "\\VarFileInfo\\Translation")[0]
+        language = hex(language)[2:].rjust(4, "0")
+        codepage = hex(codepage)[2:].rjust(4, "0")
+
+        sub_block = f"\\StringFileInfo\\{language}{codepage}\\FileDescription"
+        description = win32api.GetFileVersionInfo(exe_path, sub_block)
+    except:
+        description = os.path.basename(exe_path)
+
+    return description
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
@@ -60,4 +74,5 @@ if __name__ == '__main__':
 
     # Execute the app (required)
     # app.exec_()
-    print(get_active_window_windows_nt())
+    path = get_active_window_windows_nt()
+    print(get_exe_name_windows_nt(path))
