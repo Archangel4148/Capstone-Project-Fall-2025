@@ -11,6 +11,8 @@ from ui.main_window_init import Ui_main_window
 import os
 import psutil
 import subprocess
+import win32gui
+import win32process
 
 def get_active_window_linux_x11() -> str:
     # doesn't support wayland since there isn't a consistent method for doing so that's also supported by multiple compositors.
@@ -20,14 +22,18 @@ def get_active_window_linux_x11() -> str:
 
     proc = subprocess.Popen(["xdotool", "getwindowpid", proc], stdout=subprocess.PIPE).stdout.read()
     encoding = chardet.detect(proc)["encoding"]
-    proc = str(proc, encoding=encoding).strip()
+    pid = str(proc, encoding=encoding).strip()
+    pid = int(pid)
 
-    proc = int(proc)
-    path = psutil.Process(proc).exe()
+    path = psutil.Process(pid).exe()
     return os.path.realpath(path)
 
 def get_active_window_windows_nt() -> str:
-    pass
+    proc = win32gui.GetForegroundWindow()
+    _, pid = win32process.GetWindowThreadProcessId(proc)
+
+    path = psutil.Process(pid).exe()
+    return os.path.realpath(path)
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
