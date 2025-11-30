@@ -8,6 +8,7 @@ from tabs.timer_tab import TimerTab
 from tabs.to_do_list_tab import ToDoListTab
 from ui.main_window_init import Ui_main_window
 import system.active_window as active_window
+import system.exe_name as exe_name
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
@@ -35,4 +36,4 @@ if __name__ == '__main__':
     # Execute the app (required)
     # app.exec_()
     path = active_window.get_active_window()
-    print(path)
+    print(exe_name.get_exe_name(path))
