@@ -35,4 +35,4 @@ if __name__ == '__main__':
     # Execute the app (required)
     # app.exec_()
     path = app_tracker.get_active_window_linux_x11()
-    print(app_tracker.get_exe_name_linux(path))
+    print(app_tracker.MatchExeToDesktop(path).main())

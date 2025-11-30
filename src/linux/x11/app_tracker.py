@@ -26,12 +26,20 @@ class MatchExeToDesktop():
         self._result = os.path.basename(exe_path)
 
     def _search_desktop_file(self, file_path: str) -> bool:
-        pass
+        config = configparser.ConfigParser()
+        config.read(file_path)
+
+        try:
+            print(config.get("Desktop Entry", "Exec", raw=True))
+        except configparser.NoOptionError:
+            pass
 
     def _search_desktop_files(self, dir: str) -> None:
         for f in glob.glob(f"{dir}/**", recursive=True):
-            if not re.match("*\\.desktop"):
+            if not re.match(".*\\.desktop$", f):
                 continue
+
+            self._search_desktop_file(f)
 
     def main(self) -> None:
         for d in os.environ["XDG_DATA_DIRS"].split(":"):
