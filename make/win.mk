@@ -9,7 +9,7 @@ clean: # remove generated files
 
 compile: # compile program
 	mkdir -force bin >$$NULL
-	-robocopy.exe src bin /e /njh /njs /xf *.ui
+	-robocopy.exe src bin /e /njh /njs /xd "$PWD\src\system\linux" /xf *.ui
 	mv -force bin\main.py bin\nudgy.py
 
 compile-ui: # compile ui
