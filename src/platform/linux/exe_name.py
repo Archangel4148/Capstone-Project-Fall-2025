@@ -1,33 +1,9 @@
-import chardet
 import configparser
 import glob
 import os
-import psutil
 import re
-import subprocess
 
-def get_active_window_linux_x11() -> str:
-    # doesn't support wayland since there isn't a consistent method for doing so that's also supported by multiple compositors.
-    # doesn't support flatpak since it runs in a protected environment.
-    proc = subprocess.Popen(["xdotool", "getactivewindow"], stdout=subprocess.PIPE).stdout.read()
-    encoding = chardet.detect(proc)["encoding"]
-    proc = str(proc, encoding=encoding).strip()
-
-    proc = subprocess.Popen(["xdotool", "getwindowpid", proc], stdout=subprocess.PIPE).stdout.read()
-    encoding = chardet.detect(proc)["encoding"]
-    pid = str(proc, encoding=encoding).strip()
-    pid = int(pid)
-
-    path = ""
-    try:
-        path = psutil.Process(pid).exe()
-        path = os.path.realpath(path)
-    except psutil.AccessDenied:
-        pass
-
-    return path
-
-class MatchExeToDesktop():
+class _MatchExeToDesktop():
     def __init__(self, exe_path: str) -> None:
         self._exe_path = exe_path
         self._result = os.path.basename(exe_path)
@@ -58,7 +34,7 @@ class MatchExeToDesktop():
             if self._result_found():
                 break
 
-    def main(self) -> None:
+    def main(self) -> str:
         for d in os.environ["XDG_DATA_DIRS"].split(":"):
             d = f"{d}/applications"
 
@@ -68,3 +44,6 @@ class MatchExeToDesktop():
                 break
 
         return self._result
+
+def get_exe_name(exe_path: str) -> str:
+    return _MatchExeToDesktop(exe_path).main()
