@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '.\main_window.ui'
+# Form implementation generated from reading ui file '.\src\ui\main_window.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_main_window(object):
     def setupUi(self, main_window):
         main_window.setObjectName("main_window")
-        main_window.resize(790, 597)
+        main_window.resize(1073, 597)
         self.horizontalLayout = QtWidgets.QHBoxLayout(main_window)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()

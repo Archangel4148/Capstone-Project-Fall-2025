@@ -28,6 +28,10 @@ if __name__ == '__main__':
     # Create the application (required)
     app = QApplication([])
 
+    # Load the stylesheet
+    with open("src/app_style.qss", "r") as f:
+        app.setStyleSheet(f.read())
+
     # Create and show the main window
     main_window = MainWindow(default_start_time=90)
     main_window.show()
