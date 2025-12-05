@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>453</width>
+    <width>478</width>
     <height>300</height>
    </rect>
   </property>
@@ -41,10 +41,29 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>94</width>
-          <height>248</height>
+          <width>119</width>
+          <height>243</height>
          </rect>
         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QVBoxLayout" name="saved_timers_layout">
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>
@@ -60,27 +79,27 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0">
        <item>
-        <widget class="QTextEdit" name="timer_name_edit">
-         <property name="maximumSize">
+        <widget class="QLineEdit" name="timer_name_edit">
+         <property name="minimumSize">
           <size>
-           <width>16777215</width>
+           <width>0</width>
            <height>45</height>
           </size>
          </property>
          <property name="font">
           <font>
-           <pointsize>20</pointsize>
+           <pointsize>18</pointsize>
           </font>
          </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAsNeeded</enum>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="save_button">
          <property name="minimumSize">
           <size>
            <width>0</width>
