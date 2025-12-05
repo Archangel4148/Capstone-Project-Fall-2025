@@ -1,7 +1,9 @@
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QTabWidget, QLabel, QPushButton, QWidget, QHBoxLayout
 
+
 from api.timer import TimerTabAPI
+from sound import play_looping_sound
 from tabs.base_tab import BaseNudgyTab
 from ui.timer_tab_init import Ui_timer_tab
 
@@ -33,6 +35,11 @@ class TimerTab(BaseNudgyTab):
         self.timer_running = None
         self.timer_paused = None
 
+        # Alarm variables
+        self.stop_alarm_callback = None
+        self.blink_timer = QTimer(self)
+        self.blink_state = False
+
         # Load timers from the database
         if not self.load_timers():
             # If no timers were loaded, set the default timer
@@ -53,18 +60,31 @@ class TimerTab(BaseNudgyTab):
         hundredths = int((seconds * 100) % 100)
         return f"{minutes:02d}:{secs:02d}.{hundredths:02d}"
 
+    def _blink_label(self):
+        self.blink_state = not self.blink_state
+        if self.blink_state:
+            self.ui.timer_label.setStyleSheet("color: red;")
+        else:
+            self.ui.timer_label.setStyleSheet("color: black;")
+
     def update_display(self):
         # Update the timer display with the text formatted time
         self.ui.timer_label.setText(self.format_time(self.timer_value))
 
     def start_stop_timer(self):
+        # If alarm is active, this button stops it
+        if self.stop_alarm_callback is not None:
+            self.stop_alarm_callback()
+            self.stop_alarm_callback = None
+            self.blink_timer.stop()
+            self.ui.timer_label.setStyleSheet("color: black;")
+            self.reset_timer()
+            return
+
         if self.timer_running:
             # Stop the timer and reset
             self.timer_obj.stop()
             self.reset_timer()
-            self.ui.start_stop_button.setText("Start")
-            self.ui.pause_resume_button.setText("Pause")
-            self.ui.pause_resume_button.setEnabled(False)
         else:
             # Start the timer
             self.timer_running = True
@@ -114,15 +134,35 @@ class TimerTab(BaseNudgyTab):
 
     def timer_finished(self):
         print("TIMER FINISHED")
+        # Start alarm sound
+        self.stop_alarm_callback = play_looping_sound(r"src/assets/alarm.wav")
+
+        # Start blinking
+        self.blink_timer.setInterval(400)
+        self.blink_timer.timeout.connect(self._blink_label)
+        self.blink_timer.start()
+
+        # UI updates
+        self.ui.start_stop_button.setText("Stop Alarm")
+        self.ui.pause_resume_button.setEnabled(False)
+
         self.timer_obj.stop()
-        # Wait 1 second before resetting the timer (aesthetic)
-        QTimer.singleShot(1000, self.reset_timer)
 
     def reset_timer(self):
         # Reset the timer to its original state
         self.timer_running = False
         self.timer_value = self.active_timer.duration_sec
         self.update_display()
+        self.ui.start_stop_button.setText("Start")
+        self.ui.pause_resume_button.setText("Pause")
+        self.ui.pause_resume_button.setEnabled(False)
+
+        # Clean up any alarm variables
+        if self.stop_alarm_callback is not None:
+            self.stop_alarm_callback()
+            self.stop_alarm_callback = None
+        self.blink_timer.stop()
+        self.ui.timer_label.setStyleSheet("color: black;")
 
     def set_main_timer(self, timer_obj: Timer):
         self.timer_obj.stop()
