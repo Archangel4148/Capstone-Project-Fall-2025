@@ -10,7 +10,7 @@ from ui.main_window_init import Ui_main_window
 
 
 class MainWindow(QWidget):
-    def __init__(self, default_start_time: float = 0.0):
+    def __init__(self):
         super().__init__()
         self.ui = Ui_main_window()
         self.ui.setupUi(self)
@@ -22,14 +22,14 @@ class MainWindow(QWidget):
         self.screen_time_tab = ScreenTimeTab(self.ui.pages_tab_widget)
         self.calendar_tab = CalendarTab(self.ui.pages_tab_widget)
         self.to_do_list_tab = ToDoListTab(self.ui.pages_tab_widget)
-        self.timer_tab = TimerTab(self.ui.pages_tab_widget, default_start_time)
+        self.timer_tab = TimerTab(self.ui.pages_tab_widget)
 
 if __name__ == '__main__':
     # Create the application (required)
     app = QApplication([])
 
     # Create and show the main window
-    main_window = MainWindow(default_start_time=90)
+    main_window = MainWindow()
     main_window.show()
 
     # Execute the app (required)

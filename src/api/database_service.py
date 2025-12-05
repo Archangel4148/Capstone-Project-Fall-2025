@@ -43,7 +43,9 @@ class DatabaseService:
         cls.create_table(
             "timer",
             {
+                "name": "TEXT",
                 "duration": "INTEGER",
+                "is_main_timer": "BOOL"
             }
         )
         cls.create_table(

@@ -3,7 +3,9 @@ import dataclasses
 
 @dataclasses.dataclass
 class Timer:
+    name: str
     duration_sec: float
+    is_main_timer: bool
 
 class TimerTabAPI:
     def get_all_timers(self) -> list[Timer]:
