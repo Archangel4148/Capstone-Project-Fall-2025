@@ -13,7 +13,6 @@ class TimerTabAPI:
         timers = [Timer(*row) for row in rows]
         return timers
 
-
     def delete_timer(self, selected_timer: Timer) -> None:
         # Delete the selected timer from the database
         DatabaseService.delete(table_name="timer", conditions=[("timer_id", "=", selected_timer.duration_sec)])
