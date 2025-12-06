@@ -24,6 +24,7 @@ class MainWindow(QWidget):
         self.to_do_list_tab = ToDoListTab(self.ui.pages_tab_widget)
         self.timer_tab = TimerTab(self.ui.pages_tab_widget)
 
+
 if __name__ == '__main__':
     # Create the application (required)
     app = QApplication([])

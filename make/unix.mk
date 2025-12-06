@@ -6,7 +6,7 @@ clean: # remove generated files
 
 compile: # compile program
 	mkdir -p bin
-	rsync -a --include '*.py' src/ bin
+	rsync -a --exclude system/win --include '*.py' src/ bin
 	chmod +x bin/main.py
 	mv bin/main.py bin/nudgy
 
