@@ -7,8 +7,7 @@ from tabs.screen_time_tab import ScreenTimeTab
 from tabs.timer_tab import TimerTab
 from tabs.to_do_list_tab import ToDoListTab
 from ui.main_window_init import Ui_main_window
-import system.active_window as active_window
-import system.exe_names as exe_names
+
 
 class MainWindow(QWidget):
     def __init__(self, default_start_time: float = 0.0):
@@ -24,6 +23,7 @@ class MainWindow(QWidget):
         self.calendar_tab = CalendarTab(self.ui.pages_tab_widget)
         self.to_do_list_tab = ToDoListTab(self.ui.pages_tab_widget)
         self.timer_tab = TimerTab(self.ui.pages_tab_widget, default_start_time)
+
 
 if __name__ == '__main__':
     # Create the application (required)
