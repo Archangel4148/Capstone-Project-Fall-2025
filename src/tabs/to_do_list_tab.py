@@ -22,7 +22,7 @@ class ToDoListTab(BaseNudgyTab):
     def addItem(self):
         item = self.ui.task_description_line_edit.text() + ' Due: ' + self.ui.due_date_time_edit.text()
         to_do_list_api = ToDoListAPI()
-        dbItem = To_Do_Item(taskID= self.ui.listWidget.count(), description=self.ui.task_description_line_edit.text(), due_date=self.ui.due_date_time_edit.text())
+        dbItem = To_Do_Item(taskID= self.ui.listWidget.count(), description=self.ui.task_description_line_edit.text(), due_date=self.ui.due_date_time_edit.text(), include_calendar_item=self.ui.include_calendar_item_check_box.isChecked())
         to_do_list_api.add_item(dbItem)
         self.ui.listWidget.addItem(item)
 
