@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QTabWidget
 from tabs.base_tab import BaseNudgyTab
 from ui.calendar_tab_init import Ui_calendar_tab
 
@@ -8,12 +9,24 @@ class CalendarTab(BaseNudgyTab):
     UI_OBJECT = Ui_calendar_tab
     TAB_LABEL = "Calendar"
 
-    def __init__(self):
-        super().__init__(self.parent_tab_widget)
+    def __init__(self, parent_tab_widget: QTabWidget):
+        super().__init__(parent_tab_widget)
 
         # Create the API endpoint
         self.api = CalendarAPI()
 
+        self.ui.calendar_widget.selectionChanged.connect(self.update_selection)
+
+        # Add some sample data
+        self.api.add_item(CalendarItem(calendar_item_id=0, datetime="2025-12-06 12:00:00", event_name="Event 1", event_description="Description 1", duration=60, include_to_do_task=True, has_reminder=True))
+        self.api.add_item(CalendarItem(calendar_item_id=1, datetime="2025-12-06 13:00:00", event_name="Event 2", event_description="Description 2", duration=60, include_to_do_task=False, has_reminder=False))
+
+    def update_selection(self):
+        date = self.ui.calendar_widget.selectedDate().toString("yyyy-MM-dd")
+        self.ui.date_label.setText(date)
+        self.ui.event_list.clear()
+        for item in self.api.get_events_for_day(date):
+            self.ui.event_list.addItem(item.event_name)
 
     def add_calendar_item(self, calendar_item: CalendarItem):
-        pass
+        self.api.add_item(calendar_item)

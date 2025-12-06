@@ -1,4 +1,5 @@
 import dataclasses
+import datetime
 
 from src.api.database_service import DatabaseService
 
@@ -29,3 +30,22 @@ class CalendarAPI:
     def add_item(self, item: CalendarItem) -> None:
         # Add the provided item to the database
         DatabaseService.insert(table_name="calendar", values={"datetime": item.datetime, "event_name" : item.event_name, "event_description" : item.event_description, "duration" : item.duration, "include_to_do_task" : item.include_to_do_task, "has_reminder" : item.has_reminder})
+
+    @staticmethod
+    def get_events_for_day(date: str) -> list[CalendarItem]:
+        # Parse the input date into a datetime object for comparison
+        target_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+
+        # Format the target date to compare it with the date part of 'datetime'
+        formatted_target_date = target_date.strftime("%Y-%m-%d")
+
+        # Define the condition to filter by date (matching only the date part of the 'datetime')
+        conditions = [("datetime", "LIKE", f"{formatted_target_date}%")]
+
+        # Select rows where 'datetime' matches the target date
+        rows = DatabaseService.select(table_name="calendar", columns=None, conditions=conditions)
+
+        # Build CalendarItem objects from the retrieved rows
+        items = [CalendarItem(*row) for row in rows]
+
+        return items
