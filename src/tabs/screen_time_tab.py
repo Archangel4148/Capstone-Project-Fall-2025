@@ -49,4 +49,3 @@ class ScreenTimeTab(BaseNudgyTab):
         app = App(get_active_window(), int(time.time()))
         self.api.add_entry(app)
         self.add_row(app)
-        print(app.path, get_exe_names([app.path]), app.query_timestamp)

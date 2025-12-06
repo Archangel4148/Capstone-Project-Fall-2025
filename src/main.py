@@ -35,5 +35,3 @@ if __name__ == '__main__':
 
     # Execute the app (required)
     app.exec_()
-
-    print(exe_names.get_exe_names(["/usr/bin/fsearch", "/usr/bin/firefox"]))
