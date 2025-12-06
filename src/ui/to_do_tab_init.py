@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'to_do_tab.ui'
+# Form implementation generated from reading ui file '.\src\ui\to_do_tab.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -43,6 +43,14 @@ class Ui_to_do_tab(object):
         self.remove_task_button.setObjectName("remove_task_button")
         self.horizontalLayout_4.addWidget(self.remove_task_button)
         self.verticalLayout.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.include_calendar_item_check_box = QtWidgets.QCheckBox(to_do_tab)
+        self.include_calendar_item_check_box.setObjectName("include_calendar_item_check_box")
+        self.horizontalLayout_3.addWidget(self.include_calendar_item_check_box)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout.addLayout(self.verticalLayout)
 
         self.retranslateUi(to_do_tab)
@@ -55,3 +63,4 @@ class Ui_to_do_tab(object):
         self.label_2.setText(_translate("to_do_tab", "Due Date (Optional): "))
         self.add_task_button.setText(_translate("to_do_tab", "Add"))
         self.remove_task_button.setText(_translate("to_do_tab", "Remove"))
+        self.include_calendar_item_check_box.setText(_translate("to_do_tab", "Include Calendar Item"))
