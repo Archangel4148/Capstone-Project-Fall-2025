@@ -1,9 +1,8 @@
 from PyQt5.QtWidgets import QTabWidget
 from tabs.base_tab import BaseNudgyTab
+
+from api.calendar import CalendarAPI, CalendarItem
 from ui.calendar_tab_init import Ui_calendar_tab
-
-from src.api.calendar import CalendarAPI, CalendarItem
-
 
 class CalendarTab(BaseNudgyTab):
     UI_OBJECT = Ui_calendar_tab

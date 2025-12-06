@@ -1,8 +1,7 @@
 import dataclasses
 import datetime
 
-from src.api.database_service import DatabaseService
-
+from api.database_service import DatabaseService
 
 @dataclasses.dataclass
 class CalendarItem:
