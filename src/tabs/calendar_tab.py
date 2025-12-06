@@ -18,15 +18,19 @@ class CalendarTab(BaseNudgyTab):
         self.ui.calendar_widget.selectionChanged.connect(self.update_selection)
 
         # Add some sample data
-        self.api.add_item(CalendarItem(calendar_item_id=0, datetime="2025-12-06 12:00:00", event_name="Event 1", event_description="Description 1", duration=60, include_to_do_task=True, has_reminder=True))
-        self.api.add_item(CalendarItem(calendar_item_id=1, datetime="2025-12-06 13:00:00", event_name="Event 2", event_description="Description 2", duration=60, include_to_do_task=False, has_reminder=False))
+        self.add_calendar_item(CalendarItem(calendar_item_id=0, datetime="2025-12-06 12:00:00", event_name="Event 1", event_description="Description 1", duration=60, include_to_do_task=True, has_reminder=True))
+        self.add_calendar_item(CalendarItem(calendar_item_id=1, datetime="2025-12-06 13:00:00", event_name="Event 2", event_description="Description 2", duration=60, include_to_do_task=False, has_reminder=False))
 
     def update_selection(self):
         date = self.ui.calendar_widget.selectedDate().toString("yyyy-MM-dd")
         self.ui.date_label.setText(date)
         self.ui.event_list.clear()
         for item in self.api.get_events_for_day(date):
-            self.ui.event_list.addItem(item.event_name)
+            event_display_string = f"{item.event_name} ({item.duration} minutes)\n{item.event_description}\n"
+            self.ui.event_list.addItem(event_display_string)
 
     def add_calendar_item(self, calendar_item: CalendarItem):
+        # Don't add duplicate items
+        if self.api.check_item_in_calendar(calendar_item):
+            return
         self.api.add_item(calendar_item)

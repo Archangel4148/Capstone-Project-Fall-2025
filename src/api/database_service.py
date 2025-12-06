@@ -15,7 +15,7 @@ class DatabaseService:
         cls.create_table(
             "calendar",
             {
-                "calendar_item_id": "INTEGER PRIMARY KEY",
+                "calendar_item_id": "INTEGER",
                 "datetime": "TEXT",
                 "event_name": "TEXT",
                 "event_description": "TEXT",

@@ -29,10 +29,9 @@ class CalendarAPI:
 
     def add_item(self, item: CalendarItem) -> None:
         # Add the provided item to the database
-        DatabaseService.insert(table_name="calendar", values={"datetime": item.datetime, "event_name" : item.event_name, "event_description" : item.event_description, "duration" : item.duration, "include_to_do_task" : item.include_to_do_task, "has_reminder" : item.has_reminder})
+        DatabaseService.insert(table_name="calendar", values={"calendar_item_id": item.calendar_item_id, "datetime": item.datetime, "event_name" : item.event_name, "event_description" : item.event_description, "duration" : item.duration, "include_to_do_task" : item.include_to_do_task, "has_reminder" : item.has_reminder})
 
-    @staticmethod
-    def get_events_for_day(date: str) -> list[CalendarItem]:
+    def get_events_for_day(self, date: str) -> list[CalendarItem]:
         # Parse the input date into a datetime object for comparison
         target_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
@@ -49,3 +48,8 @@ class CalendarAPI:
         items = [CalendarItem(*row) for row in rows]
 
         return items
+
+    def check_item_in_calendar(self, item: CalendarItem):
+        # Check if the item is in the calendar
+        rows = DatabaseService.select(table_name="calendar", columns=None, conditions=[("calendar_item_id", "=", item.calendar_item_id)])
+        return len(rows) > 0
