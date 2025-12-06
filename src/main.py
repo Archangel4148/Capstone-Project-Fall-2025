@@ -27,13 +27,13 @@ class MainWindow(QWidget):
 
 if __name__ == '__main__':
     # Create the application (required)
-    # app = QApplication([])
+    app = QApplication([])
 
     # Create and show the main window
-    # main_window = MainWindow(default_start_time=90)
-    # main_window.show()
+    main_window = MainWindow(default_start_time=90)
+    main_window.show()
 
     # Execute the app (required)
-    # app.exec_()
+    app.exec_()
 
     print(exe_names.get_exe_names(["/usr/bin/fsearch", "/usr/bin/firefox"]))
