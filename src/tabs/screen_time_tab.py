@@ -1,7 +1,7 @@
 import time
 
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QTabWidget
+from PyQt5.QtWidgets import QTableWidgetItem, QTabWidget
 
 from api.screen_time import App, ScreenTimeAPI
 from tabs.base_tab import BaseNudgyTab
@@ -29,6 +29,16 @@ class ScreenTimeTab(BaseNudgyTab):
         self.timer.setInterval(self.REFRESH_RATE_MS)
         self.timer.timeout.connect(self.log_application)
 
+        self.ui.screen_time_table_widget.setItem(0, 0, QTableWidgetItem())
+
+    def add_row(self, exe: App) -> None:
+        app_name = get_exe_names([exe.path])
+
+        row = self.ui.screen_time_table_widget.rowCount()
+        self.ui.screen_time_table_widget.insertRow(row)
+        self.ui.screen_time_table_widget.setItem(row, 0, QTableWidgetItem(app_name[exe.path]))
+        self.ui.screen_time_table_widget.setItem(row, 1, QTableWidgetItem(str(exe.query_timestamp)))
+
     def toggle_app_tracking(self) -> None:
         if self.timer.isActive():
             self.timer.stop()
@@ -38,4 +48,5 @@ class ScreenTimeTab(BaseNudgyTab):
     def log_application(self) -> None:
         app = App(get_active_window(), int(time.time()))
         self.api.add_entry(app)
+        self.add_row(app)
         print(app.path, get_exe_names([app.path]), app.query_timestamp)
