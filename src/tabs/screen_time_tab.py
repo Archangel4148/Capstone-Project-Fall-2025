@@ -1,7 +1,9 @@
+import time
+
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QTabWidget
 
-from api.timer import TimerTabAPI
+from api.screen_time import App, ScreenTimeAPI
 from tabs.base_tab import BaseNudgyTab
 from ui.screen_time_tab_init import Ui_screen_time_tab
 from system.active_window import get_active_window
@@ -19,6 +21,7 @@ class ScreenTimeTab(BaseNudgyTab):
         super().__init__(parent_tab_widget)
 
         # Create the API endpoint
+        self.api = ScreenTimeAPI()
 
         # Make UI connections
         self.ui.update_screen_time_button.pressed.connect(self.toggle_app_tracking)
@@ -32,6 +35,7 @@ class ScreenTimeTab(BaseNudgyTab):
         else:
             self.timer.start()
 
-
     def log_application(self) -> None:
-        print(get_exe_names([get_active_window()]))
+        app = App(get_active_window(), int(time.time()))
+        self.api.add_entry(app)
+        print(app.path, get_exe_names([app.path]), app.query_timestamp)
