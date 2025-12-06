@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'calendar_tab.ui'
+# Form implementation generated from reading ui file '.\src\ui\calendar_tab.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
 #
@@ -14,12 +14,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_calendar_tab(object):
     def setupUi(self, calendar_tab):
         calendar_tab.setObjectName("calendar_tab")
-        calendar_tab.resize(400, 300)
+        calendar_tab.resize(411, 300)
         self.horizontalLayout = QtWidgets.QHBoxLayout(calendar_tab)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.calendar_widget = QtWidgets.QCalendarWidget(calendar_tab)
         self.calendar_widget.setObjectName("calendar_widget")
         self.horizontalLayout.addWidget(self.calendar_widget)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.date_label = QtWidgets.QLabel(calendar_tab)
+        self.date_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.date_label.setObjectName("date_label")
+        self.verticalLayout.addWidget(self.date_label)
+        self.event_list = QtWidgets.QListWidget(calendar_tab)
+        self.event_list.setObjectName("event_list")
+        self.verticalLayout.addWidget(self.event_list)
+        self.horizontalLayout.addLayout(self.verticalLayout)
+        self.horizontalLayout.setStretch(0, 5)
+        self.horizontalLayout.setStretch(1, 2)
 
         self.retranslateUi(calendar_tab)
         QtCore.QMetaObject.connectSlotsByName(calendar_tab)
@@ -27,3 +39,4 @@ class Ui_calendar_tab(object):
     def retranslateUi(self, calendar_tab):
         _translate = QtCore.QCoreApplication.translate
         calendar_tab.setWindowTitle(_translate("calendar_tab", "Calendar Tab"))
+        self.date_label.setText(_translate("calendar_tab", "<DATE HERE>"))
