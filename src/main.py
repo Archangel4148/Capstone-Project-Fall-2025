@@ -29,7 +29,7 @@ if __name__ == '__main__':
     app = QApplication([])
 
     # Load the stylesheet
-    with open("src/app_style.qss", "r") as f:
+    with open("app_style.qss", "r") as f:
         app.setStyleSheet(f.read())
 
     # Create and show the main window
