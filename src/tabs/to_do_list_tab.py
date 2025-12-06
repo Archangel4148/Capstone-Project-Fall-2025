@@ -1,7 +1,8 @@
 from tabs.base_tab import BaseNudgyTab
 from PyQt5.QtWidgets import QTabWidget
 from ui.to_do_tab_init import Ui_to_do_tab
-from api.to_do_list import ToDoListAPI, To_Do_Item  # Import the class, not the module
+from api.to_do_list import ToDoListAPI, To_Do_Item
+from api.calendar import CalendarAPI, CalendarItem
 
 class ToDoListTab(BaseNudgyTab):
     UI_OBJECT = Ui_to_do_tab
@@ -24,6 +25,14 @@ class ToDoListTab(BaseNudgyTab):
         to_do_list_api = ToDoListAPI()
         dbItem = To_Do_Item(taskID= self.ui.listWidget.count(), description=self.ui.task_description_line_edit.text(), due_date=self.ui.due_date_time_edit.text(), include_calendar_item=self.ui.include_calendar_item_check_box.isChecked())
         to_do_list_api.add_item(dbItem)
+
+        if self.ui.include_calendar_item_check_box.isChecked():
+            calendar_api = CalendarAPI()
+            dateTimeFix = self.ui.due_date_time_edit.dateTime().toString("yyyy-MM-dd HH:mm:ss")
+            calendar_item = CalendarItem(calendar_item_id=self.ui.listWidget.count(), datetime=dateTimeFix, event_name=self.ui.task_description_line_edit.text(), event_description="", duration=0, include_to_do_task=True, has_reminder=False)
+            calendar_api.add_item(calendar_item)
+
+
         self.ui.listWidget.addItem(item)
 
     def deleteItem(self):
