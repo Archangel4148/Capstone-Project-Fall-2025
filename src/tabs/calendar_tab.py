@@ -17,10 +17,6 @@ class CalendarTab(BaseNudgyTab):
 
         self.ui.calendar_widget.selectionChanged.connect(self.update_selection)
 
-        # Add some sample data
-        self.add_calendar_item(CalendarItem(calendar_item_id=0, datetime="2025-12-06 12:00:00", event_name="Event 1", event_description="Description 1", duration=60, include_to_do_task=True, has_reminder=True))
-        self.add_calendar_item(CalendarItem(calendar_item_id=1, datetime="2025-12-06 13:00:00", event_name="Event 2", event_description="Description 2", duration=60, include_to_do_task=False, has_reminder=False))
-
     def update_selection(self):
         date = self.ui.calendar_widget.selectedDate().toString("yyyy-MM-dd")
         self.ui.date_label.setText(date)
