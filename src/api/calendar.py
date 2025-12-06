@@ -28,6 +28,8 @@ class CalendarAPI:
 
     def add_item(self, item: CalendarItem) -> None:
         # Add the provided item to the database
+        if self.check_item_in_calendar(item):
+            return
         DatabaseService.insert(table_name="calendar", values={"calendar_item_id": item.calendar_item_id, "datetime": item.datetime, "event_name" : item.event_name, "event_description" : item.event_description, "duration" : item.duration, "include_to_do_task" : item.include_to_do_task, "has_reminder" : item.has_reminder})
 
     def get_events_for_day(self, date: str) -> list[CalendarItem]:
