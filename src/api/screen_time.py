@@ -1,23 +1,64 @@
 from api.database_service import DatabaseService
 import dataclasses
+import itertools
+import time
 
 @dataclasses.dataclass
 class AppTimestamp:
     path: str
     query_timestamp: int
 
+class App():
+    def __init__(self, path: str, timestamps: list[int]=list()) -> None:
+        self._path: str = path
+        self._timestamps: list[int] = timestamps
+
+        self._api = ScreenTimeAPI()
+
+    def get_path(self) -> str:
+        return self._path
+
+    def get_timestamps(self) -> list[int]:
+        return self._timestamps
+
+    def _add_timestamp(self, timestamp: int) -> None:
+        self._api.add_entry(AppTimestamp(self._path, timestamp))
+        self._timestamps.append(timestamp)
+
+    def add_timestamps(self, timestamps: list[int]) -> None:
+        for t in timestamps:
+            self._add_timestamp(t)
+
+    def get_usage_percent(self) -> None:
+        return len(self._timestamps) / time.time()
+
 class ScreenTimeAPI:
-    def get_application_usage(self, query_end_time=0) -> list[AppTimestamp]:
+    def get_application_usage(self, query_end_time=0) -> list[App]:
+        apps = list()
         query_end_time = str(query_end_time)
 
-        rows = DatabaseService.select(
+        paths = DatabaseService.select(
             "screen_time",
-            ["application_path", "query_timestamp"],
+            ["application_path"],
             [("query_timestamp", ">", query_end_time)]
         )
-        app_usage = [AppTimestamp(*row) for row in rows]
+        paths = {p[0] for p in paths}
 
-        return app_usage
+        for p in paths:
+            timestamps = DatabaseService.select(
+                "screen_time",
+                ["query_timestamp"],
+                [
+                    ("query_timestamp", ">", query_end_time),
+                    ("application_path", "=", p)
+                ]
+            )
+            timestamps = [t[0] for t in timestamps]
+            print(timestamps)
+
+            apps.append(App(p, timestamps))
+
+        return apps
 
     def delete_after_date(self, end_time=0) -> None:
         end_time = str(end_time)
