@@ -31,6 +31,11 @@ class ScreenTimeTab(BaseNudgyTab):
 
         self.ui.screen_time_table_widget.setItem(0, 0, QTableWidgetItem())
 
+        previous_usage = ScreenTimeAPI().get_application_usage()
+
+        for a in previous_usage:
+            self.add_row(a)
+
     def add_row(self, exe: App) -> None:
         app_name = get_exe_names([exe.path])
 
