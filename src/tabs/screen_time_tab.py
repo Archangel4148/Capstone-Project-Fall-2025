@@ -3,7 +3,7 @@ import time
 from PyQt5.QtCore import QTimer
 from PyQt5.QtWidgets import QTableWidgetItem, QTabWidget
 
-from api.screen_time import App, ScreenTimeAPI
+from api.screen_time import AppTimestamp, ScreenTimeAPI
 from tabs.base_tab import BaseNudgyTab
 from ui.screen_time_tab_init import Ui_screen_time_tab
 from system.active_window import get_active_window
@@ -31,12 +31,12 @@ class ScreenTimeTab(BaseNudgyTab):
 
         self.ui.screen_time_table_widget.setItem(0, 0, QTableWidgetItem())
 
-        previous_usage = ScreenTimeAPI().get_application_usage()
+        self._usage = ScreenTimeAPI().get_application_usage()
 
-        for a in previous_usage:
+        for a in self._usage:
             self.add_row(a)
 
-    def add_row(self, exe: App) -> None:
+    def add_row(self, exe: AppTimestamp) -> None:
         app_name = get_exe_names([exe.path])
 
         row = self.ui.screen_time_table_widget.rowCount()
@@ -51,6 +51,6 @@ class ScreenTimeTab(BaseNudgyTab):
             self.timer.start()
 
     def log_application(self) -> None:
-        app = App(get_active_window(), int(time.time()))
+        app = AppTimestamp(get_active_window(), int(time.time()))
         self.api.add_entry(app)
         self.add_row(app)
