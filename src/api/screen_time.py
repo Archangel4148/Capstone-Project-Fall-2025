@@ -26,13 +26,13 @@ class App():
     def get_timestamps(self) -> list[int]:
         return self._timestamps
 
-    def _add_timestamp(self, timestamp: int) -> None:
+    def add_timestamp(self, timestamp: int) -> None:
         self._api.add_entry(AppTimestamp(self._path, timestamp))
         self._timestamps.append(timestamp)
 
     def add_timestamps(self, timestamps: list[int]) -> None:
         for t in timestamps:
-            self._add_timestamp(t)
+            self.add_timestamp(t)
 
 class ScreenTimeAPI:
     def get_application_usage(self, query_end_time=0) -> list[App]:
