@@ -18,6 +18,9 @@
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
       <widget class="QTableWidget" name="screen_time_table_widget">
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
        <attribute name="horizontalHeaderCascadingSectionResizes">
         <bool>false</bool>
        </attribute>
@@ -32,35 +35,32 @@
        </attribute>
        <column>
         <property name="text">
-         <string>Application</string>
+         <string>Application (name)</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Time</string>
+         <string>Application (path)</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Time (minutes)</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Usage (percent)</string>
         </property>
        </column>
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="4,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0">
        <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="update_screen_time_button">
+        <widget class="QCheckBox" name="update_screen_time_button">
          <property name="text">
-          <string>Update</string>
+          <string>Scan applications</string>
          </property>
         </widget>
        </item>

@@ -13,6 +13,7 @@ class ScreenTimeTab(BaseNudgyTab):
     UI_OBJECT = Ui_screen_time_tab
     TAB_LABEL = "Screen Time"
 
+    DECIMAL_RESOLUTION = 1
     REFRESH_RATE_SEC = 5
     REFRESH_RATE_MS = REFRESH_RATE_SEC * 1000
 
@@ -40,10 +41,19 @@ class ScreenTimeTab(BaseNudgyTab):
             self.add_row(a)
 
     def add_row(self, exe: App) -> None:
+        name = exe.get_name()
+        path = exe.get_path()
+        time_mins = (len(exe.get_timestamps()) * self.REFRESH_RATE_SEC) / 60
+        time_mins = str(round(time_mins, self.DECIMAL_RESOLUTION))
+        time_percent = len(exe.get_timestamps()) * 100 / self._total_time_sec
+        time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
+
         row = self.ui.screen_time_table_widget.rowCount()
         self.ui.screen_time_table_widget.insertRow(row)
-        self.ui.screen_time_table_widget.setItem(row, 0, QTableWidgetItem(exe.get_name()))
-        self.ui.screen_time_table_widget.setItem(row, 1, QTableWidgetItem(f"{(len(exe.get_timestamps()) * 100) // self._total_time_sec}%"))
+        self.ui.screen_time_table_widget.setItem(row, 0, QTableWidgetItem(name))
+        self.ui.screen_time_table_widget.setItem(row, 1, QTableWidgetItem(path))
+        self.ui.screen_time_table_widget.setItem(row, 2, QTableWidgetItem(time_mins))
+        self.ui.screen_time_table_widget.setItem(row, 3, QTableWidgetItem(time_percent))
 
     def toggle_app_tracking(self) -> None:
         if self.timer.isActive():
