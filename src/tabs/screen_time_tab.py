@@ -45,7 +45,7 @@ class ScreenTimeTab(BaseNudgyTab):
             if a.get_path() == path:
                 return a
 
-        self._usage.append(App(get_exe_names([path]), path))
+        self._usage.append(App(get_exe_names([path])[path], path))
         return self._usage[-1]
 
     def get_row(self, path: str) -> int:
