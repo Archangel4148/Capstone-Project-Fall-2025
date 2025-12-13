@@ -58,7 +58,6 @@ class ScreenTimeAPI:
                 ]
             )
             timestamps = [t[0] for t in timestamps]
-            print(timestamps)
 
             apps.append(App(names[p], p, timestamps))
 

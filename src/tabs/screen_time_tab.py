@@ -31,6 +31,10 @@ class ScreenTimeTab(BaseNudgyTab):
         self.ui.screen_time_table_widget.setItem(0, 0, QTableWidgetItem())
 
         self._usage = ScreenTimeAPI().get_application_usage()
+        self._total_time_sec: int = 0
+
+        for u in self._usage:
+            self._total_time_sec += len(u.get_timestamps()) * self.REFRESH_RATE_SEC
 
         for a in self._usage:
             self.add_row(a)
@@ -39,7 +43,7 @@ class ScreenTimeTab(BaseNudgyTab):
         row = self.ui.screen_time_table_widget.rowCount()
         self.ui.screen_time_table_widget.insertRow(row)
         self.ui.screen_time_table_widget.setItem(row, 0, QTableWidgetItem(exe.get_name()))
-        self.ui.screen_time_table_widget.setItem(row, 1, QTableWidgetItem())
+        self.ui.screen_time_table_widget.setItem(row, 1, QTableWidgetItem(f"{(len(exe.get_timestamps()) * 100) // self._total_time_sec}%"))
 
     def toggle_app_tracking(self) -> None:
         if self.timer.isActive():
