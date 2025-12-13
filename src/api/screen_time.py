@@ -1,4 +1,5 @@
 from api.database_service import DatabaseService
+from system.exe_names import get_exe_names
 import dataclasses
 import itertools
 import time
@@ -9,11 +10,15 @@ class AppTimestamp:
     query_timestamp: int
 
 class App():
-    def __init__(self, path: str, timestamps: list[int]=list()) -> None:
+    def __init__(self, name: str, path: str, timestamps: list[int]=list()) -> None:
+        self._name: str = name
         self._path: str = path
         self._timestamps: list[int] = timestamps
 
         self._api = ScreenTimeAPI()
+
+    def get_name(self) -> str:
+        return self._name
 
     def get_path(self) -> str:
         return self._path
@@ -29,9 +34,6 @@ class App():
         for t in timestamps:
             self._add_timestamp(t)
 
-    def get_usage_percent(self) -> None:
-        return len(self._timestamps) / time.time()
-
 class ScreenTimeAPI:
     def get_application_usage(self, query_end_time=0) -> list[App]:
         apps = list()
@@ -42,7 +44,9 @@ class ScreenTimeAPI:
             ["application_path"],
             [("query_timestamp", ">", query_end_time)]
         )
-        paths = {p[0] for p in paths}
+        paths = list({p[0] for p in paths})
+
+        names = get_exe_names(paths)
 
         for p in paths:
             timestamps = DatabaseService.select(
@@ -56,7 +60,7 @@ class ScreenTimeAPI:
             timestamps = [t[0] for t in timestamps]
             print(timestamps)
 
-            apps.append(App(p, timestamps))
+            apps.append(App(names[p], p, timestamps))
 
         return apps
 
