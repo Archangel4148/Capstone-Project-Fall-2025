@@ -45,7 +45,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Time (minutes)</string>
+         <string>Time (hours)</string>
         </property>
        </column>
        <column>
@@ -56,13 +56,23 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,0,0">
        <item>
         <widget class="QCheckBox" name="update_screen_time_button">
          <property name="text">
           <string>Scan applications</string>
          </property>
         </widget>
+       </item>
+       <item alignment="Qt::AlignRight">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>History (hours)</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignRight">
+        <widget class="QLineEdit" name="screen_time_history"/>
        </item>
       </layout>
      </item>

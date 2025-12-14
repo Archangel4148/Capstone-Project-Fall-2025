@@ -75,9 +75,15 @@ class ScreenTimeTab(BaseNudgyTab):
         name = app.get_name()
         path = app.get_path()
 
-        time_mins = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / 60
+        time_hrs = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / pow(60, 2)
+        time_mins = (time_hrs - int(time_hrs)) * 60
         time_sec = (time_mins - int(time_mins)) * 60
-        time_mins = f"{int(time_mins)}:{time_sec}"
+
+        time_hrs = str(int(time_hrs)).rjust(2, "0")
+        time_mins = str(int(time_mins)).rjust(2, "0")
+        time_sec = str(int(time_sec)).rjust(2, "0")
+
+        time_mins = f"{time_hrs}:{time_mins}:{time_sec}"
 
         time_percent = len(app.get_timestamps()) * 100 / self._total_time_sec
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
