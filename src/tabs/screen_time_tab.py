@@ -101,6 +101,8 @@ class ScreenTimeTab(BaseNudgyTab):
         self.ui.screen_time_table_widget.setSortingEnabled(True)
 
     def update_time_percent(self) -> None:
+        self.ui.screen_time_table_widget.setSortingEnabled(False)
+
         rows = self.ui.screen_time_table_widget.rowCount()
         for r in range(rows):
             path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
@@ -110,6 +112,8 @@ class ScreenTimeTab(BaseNudgyTab):
             time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
 
             self.ui.screen_time_table_widget.item(r, self.TIME_PERCENT_COL).setText(time_percent)
+
+        self.ui.screen_time_table_widget.setSortingEnabled(True)
 
     def toggle_app_tracking(self) -> None:
         if self.timer.isActive():
