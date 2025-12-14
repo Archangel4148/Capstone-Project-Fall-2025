@@ -18,6 +18,9 @@ def get_exe_names(exe_paths: list[str]) -> dict[str, str]:
     results = dict()
 
     for e in exe_paths:
+        if e == "":
+            continue
+
         results[e] = _get_exe_name(e)
 
     return results
