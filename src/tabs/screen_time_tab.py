@@ -14,11 +14,11 @@ class ScreenTimeTab(BaseNudgyTab):
     UI_OBJECT = Ui_screen_time_tab
     TAB_LABEL = "Screen Time"
     DECIMAL_RESOLUTION = 1
-    DELETE_AFTER_DAYS = 30
+    DELETE_AFTER_DAYS = 7
     DELETE_AFTER_SEC = DELETE_AFTER_DAYS * 24 * 60 * 60
     DELETE_AFTER_DATE = int(time.time() - DELETE_AFTER_SEC)
     NAME_COL, PATH_COL, TIME_ACTUAL_COL, TIME_PERCENT_COL = range(4)
-    REFRESH_RATE_SEC = 5
+    REFRESH_RATE_SEC = 60
     REFRESH_RATE_MS = REFRESH_RATE_SEC * 1000
 
     def __init__(self, parent_tab_widget: QTabWidget) -> None:
