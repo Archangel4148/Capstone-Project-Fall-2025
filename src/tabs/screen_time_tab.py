@@ -13,6 +13,9 @@ class ScreenTimeTab(BaseNudgyTab):
     UI_OBJECT = Ui_screen_time_tab
     TAB_LABEL = "Screen Time"
     DECIMAL_RESOLUTION = 1
+    DELETE_AFTER_DAYS = 30
+    DELETE_AFTER_SEC = DELETE_AFTER_DAYS * 24 * 60 * 60
+    DELETE_AFTER_DATE = int(time.time() - DELETE_AFTER_SEC)
     NAME_COL, PATH_COL, TIME_ACTUAL_COL, TIME_PERCENT_COL = range(4)
     REFRESH_RATE_SEC = 5
     REFRESH_RATE_MS = REFRESH_RATE_SEC * 1000
@@ -39,6 +42,8 @@ class ScreenTimeTab(BaseNudgyTab):
 
         for a in self._usage:
             self.set_row(a)
+
+        self.api.delete_after_date(self.DELETE_AFTER_DATE)
 
     def get_app(self, path: str) -> App:
         for a in self._usage:
@@ -75,7 +80,7 @@ class ScreenTimeTab(BaseNudgyTab):
         name = app.get_name()
         path = app.get_path()
 
-        time_hrs = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / pow(60, 2)
+        time_hrs = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / (60 * 60)
         time_mins = (time_hrs - int(time_hrs)) * 60
         time_sec = (time_mins - int(time_mins)) * 60
 
