@@ -25,7 +25,7 @@ class ScreenTimeTab(BaseNudgyTab):
         super().__init__(parent_tab_widget)
 
         self._total_time_sec: int = 0
-        self._history_sec: int = sys.maxsize
+        self._history_sec: int = 0
 
         # Create the API endpoint
         self.api = ScreenTimeAPI()
@@ -42,10 +42,9 @@ class ScreenTimeTab(BaseNudgyTab):
         self._apps = ScreenTimeAPI().get_application_usage()
 
         for a in self._apps:
-            self._total_time_sec += len(a.get_timestamps()) * self.REFRESH_RATE_SEC
-
-        for a in self._apps:
             self.set_row(a)
+
+        self.set_history_sec(sys.maxsize)
 
     def get_app(self, path: str) -> App:
         for a in self._apps:
@@ -77,13 +76,15 @@ class ScreenTimeTab(BaseNudgyTab):
 
         return rows[0].row()
 
-    def set_history_sec(self) -> None:
-        history_hrs = self.ui.screen_time_history.text()
+    def set_history_sec(self, history_sec: int=0) -> None:
+        if history_sec == 0:
+            history_hrs = self.ui.screen_time_history.text()
+            history_sec = int(float(history_hrs) * 60 * 60)
 
-        if history_hrs == self._history_sec:
+        if history_sec == self._history_sec:
             return
 
-        self._history_sec = int(float(history_hrs) * 60 * 60)
+        self._history_sec = history_sec
 
         self._total_time_sec = 0
         for a in self._apps:
