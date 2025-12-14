@@ -1,3 +1,4 @@
+import sys
 import time
 
 from PyQt5.QtCore import Qt, QTimer
@@ -24,14 +25,14 @@ class ScreenTimeTab(BaseNudgyTab):
         super().__init__(parent_tab_widget)
 
         self._total_time_sec: int = 0
-        self._history_hrs: float = 0
+        self._history_sec: int = sys.maxsize
 
         # Create the API endpoint
         self.api = ScreenTimeAPI()
 
         # Make UI connections
         self.ui.update_screen_time_button.pressed.connect(self.toggle_app_tracking)
-        self.ui.screen_time_history.editingFinished.connect(self.set_history_hrs)
+        self.ui.screen_time_history.editingFinished.connect(self.set_history_sec)
         self.timer = QTimer(self)
         self.timer.setInterval(self.REFRESH_RATE_MS)
         self.timer.timeout.connect(self.log_application)
@@ -54,6 +55,9 @@ class ScreenTimeTab(BaseNudgyTab):
         self._apps.append(App(get_exe_names([path])[path], path))
         return self._apps[-1]
 
+    def get_history_sec(self) -> int:
+        return int(time.time() - self._history_sec)
+
     def get_row(self, path: str) -> int:
         rows = self.ui.screen_time_table_widget.findItems(
             path,
@@ -73,8 +77,19 @@ class ScreenTimeTab(BaseNudgyTab):
 
         return rows[0].row()
 
-    def set_history_hrs(self) -> None:
-        pass
+    def set_history_sec(self) -> None:
+        history_hrs = self.ui.screen_time_history.text()
+
+        if history_hrs == self._history_sec:
+            return
+
+        self._history_sec = int(float(history_hrs) * 60 * 60)
+
+        self._total_time_sec = 0
+        for a in self._apps:
+            self._total_time_sec += len(a.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC
+
+        self.update_time_percent()
 
     def set_row(self, app: App) -> None:
         self.ui.screen_time_table_widget.setSortingEnabled(False)
@@ -84,7 +99,7 @@ class ScreenTimeTab(BaseNudgyTab):
         name = app.get_name()
         path = app.get_path()
 
-        time_hrs = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / (60 * 60)
+        time_hrs = (len(app.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC) / (60 * 60)
         time_mins = (time_hrs - int(time_hrs)) * 60
         time_sec = (time_mins - int(time_mins)) * 60
 
@@ -94,7 +109,11 @@ class ScreenTimeTab(BaseNudgyTab):
 
         time_actual = f"{time_hrs}:{time_mins}:{time_sec}"
 
-        time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
+        time_percent = 0
+        try:
+            time_percent = (len(app.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
+        except ZeroDivisionError:
+            pass
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
         time_percent = str(time_percent).rjust(5, "0")
 
@@ -113,7 +132,11 @@ class ScreenTimeTab(BaseNudgyTab):
             path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
             app = self.get_app(path)
 
-            time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
+            time_percent = 0
+            try:
+                time_percent = (len(app.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
+            except ZeroDivisionError:
+                pass
             time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
             time_percent = str(time_percent).rjust(5, "0")
 
