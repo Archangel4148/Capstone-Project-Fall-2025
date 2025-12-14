@@ -104,16 +104,18 @@ class ScreenTimeTab(BaseNudgyTab):
         self.ui.screen_time_table_widget.item(row, self.NAME_COL).setText(name)
         self.ui.screen_time_table_widget.item(row, self.PATH_COL).setText(path)
 
-        self.update_time_actual(False)
+        self.update_time_actual(False, [row])
         self.update_time_percent(False)
 
         self.ui.screen_time_table_widget.setSortingEnabled(True)
 
-    def update_time_actual(self, enable_sorting_after: bool=True) -> None:
+    def update_time_actual(self, enable_sorting_after: bool=True, rows: list[int] | None=None) -> None:
         self.ui.screen_time_table_widget.setSortingEnabled(False)
 
-        rows = self.ui.screen_time_table_widget.rowCount()
-        for r in range(rows):
+        if rows == None:
+            rows = range(self.ui.screen_time_table_widget.rowCount())
+
+        for r in rows:
             path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
             app = self.get_app(path)
 
@@ -131,11 +133,13 @@ class ScreenTimeTab(BaseNudgyTab):
 
         self.ui.screen_time_table_widget.setSortingEnabled(enable_sorting_after)
 
-    def update_time_percent(self, enable_sorting_after: bool=True) -> None:
+    def update_time_percent(self, enable_sorting_after: bool=True, rows: list[int] | None=None) -> None:
         self.ui.screen_time_table_widget.setSortingEnabled(False)
 
-        rows = self.ui.screen_time_table_widget.rowCount()
-        for r in range(rows):
+        if rows == None:
+            rows = range(self.ui.screen_time_table_widget.rowCount())
+
+        for r in rows:
             path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
             app = self.get_app(path)
 
