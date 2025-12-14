@@ -41,10 +41,10 @@ class ScreenTimeTab(BaseNudgyTab):
         self.api.delete_after_date(self.DELETE_AFTER_DATE)
         self._apps = ScreenTimeAPI().get_application_usage()
 
+        self.set_history_sec(sys.maxsize)
+
         for a in self._apps:
             self.set_row(a)
-
-        self.set_history_sec(sys.maxsize)
 
     def get_app(self, path: str) -> App:
         for a in self._apps:
