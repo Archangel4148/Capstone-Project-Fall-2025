@@ -90,6 +90,7 @@ class ScreenTimeTab(BaseNudgyTab):
 
         time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
+        time_percent = str(time_percent).rjust(5, "0")
 
         self.ui.screen_time_table_widget.item(row, self.NAME_COL).setText(name)
         self.ui.screen_time_table_widget.item(row, self.PATH_COL).setText(path)
@@ -108,6 +109,7 @@ class ScreenTimeTab(BaseNudgyTab):
 
             time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
             time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
+            time_percent = str(time_percent).rjust(5, "0")
 
             self.ui.screen_time_table_widget.item(r, self.TIME_PERCENT_COL).setText(time_percent)
 
