@@ -1,3 +1,4 @@
+import math
 import sys
 import time
 
@@ -125,7 +126,8 @@ class ScreenTimeTab(BaseNudgyTab):
             time_mins = (time_hrs - int(time_hrs)) * 60
             time_sec = (time_mins - int(time_mins)) * 60
 
-            time_hrs = str(int(time_hrs)).rjust(2, "0")
+            max_hrs_len = int(math.log10(self.DELETE_AFTER_DAYS * 24)) + 1
+            time_hrs = str(int(time_hrs)).rjust(max_hrs_len, "0")
             time_mins = str(int(time_mins)).rjust(2, "0")
             time_sec = str(int(time_sec)).rjust(2, "0")
 
