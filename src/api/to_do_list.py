@@ -4,9 +4,10 @@ import dataclasses
 @dataclasses.dataclass
 
 class To_Do_Item:
+    taskID: int
     description: str
     due_date: str
-    include_calendar_item: bool
+    include_calendar_item: bool = False
 
 class ToDoListAPI:
     def get_all_items(self) -> list[To_Do_Item]:
@@ -19,8 +20,8 @@ class ToDoListAPI:
 
     def delete_item(self, selected_item: To_Do_Item) -> None:
         # Delete the selected to do list item from the database
-        DatabaseService.delete(table_name="to_do_list", conditions=[("to_do_item_id", "=", selected_item.description)])
+        DatabaseService.delete(table_name="to_do_list", conditions=[("description", "=", selected_item.description)])
 
     def add_item(self, item: To_Do_Item) -> None:
         # Add the provided item to the database
-        DatabaseService.insert(table_name="to_do_list", values={"description": item.description, "due_date" : item.due_date, "include_calendar" : item.include_calendar_item})
+        DatabaseService.insert(table_name="to_do_list", values={"description": item.description, "due_date" : item.due_date, "include_calendar_item" : item.include_calendar_item})
