@@ -16,10 +16,9 @@ class ScreenTimeTab(BaseNudgyTab):
     DECIMAL_RESOLUTION = 1
     DELETE_AFTER_DAYS = 7
     DELETE_AFTER_SEC = DELETE_AFTER_DAYS * 24 * 60 * 60
-    DELETE_AFTER_DATE = int(time.time() - DELETE_AFTER_SEC)
     NAME_COL, PATH_COL, TIME_ACTUAL_COL, TIME_PERCENT_COL = range(4)
-    REFRESH_RATE_SEC = 60
-    REFRESH_RATE_MS = REFRESH_RATE_SEC * 1000
+    REFRESH_RATE_SEC = 1
+    REFRESH_RATE_MS = int(REFRESH_RATE_SEC * 1000)
 
     def __init__(self, parent_tab_widget: QTabWidget) -> None:
         super().__init__(parent_tab_widget)
@@ -38,7 +37,6 @@ class ScreenTimeTab(BaseNudgyTab):
         self.timer.timeout.connect(self.log_application)
 
         # Load data
-        self.api.delete_after_date(self.DELETE_AFTER_DATE)
         self._apps = ScreenTimeAPI().get_application_usage()
 
         self.set_history_sec(sys.maxsize)
@@ -166,6 +164,7 @@ class ScreenTimeTab(BaseNudgyTab):
             self.timer.start()
 
     def log_application(self) -> None:
+        self.api.delete_after_date(int(time.time() - self.DELETE_AFTER_SEC))
         self._total_time_sec += self.REFRESH_RATE_SEC
 
         app_timestamp = AppTimestamp(get_active_window(), int(time.time()))

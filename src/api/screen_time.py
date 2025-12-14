@@ -9,11 +9,18 @@ class AppTimestamp:
     path: str
     query_timestamp: int
 
+_app_skip_tracker = 1
 class App():
+    SKIP_RATE = 60
+
     def __init__(self, name: str, path: str, timestamps: list[int]=list()) -> None:
         self._name: str = name
         self._path: str = path
-        self._timestamps: list[int] = timestamps
+        self._timestamps: list[int] = list()
+
+        for t in timestamps:
+            for _ in range(self.SKIP_RATE):
+                self._timestamps.append(t)
 
         self._api = ScreenTimeAPI()
 
@@ -27,8 +34,13 @@ class App():
         return [t for t in self._timestamps if t > end_time]
 
     def add_timestamp(self, timestamp: int) -> None:
-        self._api.add_entry(AppTimestamp(self._path, timestamp))
+        global _app_skip_tracker
+
+        if _app_skip_tracker % self.SKIP_RATE == 0:
+            self._api.add_entry(AppTimestamp(self._path, timestamp))
+
         self._timestamps.append(timestamp)
+        _app_skip_tracker += 1
 
     def add_timestamps(self, timestamps: list[int]) -> None:
         for t in timestamps:
