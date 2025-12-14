@@ -83,17 +83,29 @@ class ScreenTimeTab(BaseNudgyTab):
         time_mins = str(int(time_mins)).rjust(2, "0")
         time_sec = str(int(time_sec)).rjust(2, "0")
 
-        time_mins = f"{time_hrs}:{time_mins}:{time_sec}"
+        time_actual = f"{time_hrs}:{time_mins}:{time_sec}"
 
-        time_percent = len(app.get_timestamps()) * 100 / self._total_time_sec
+        time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
 
         self.ui.screen_time_table_widget.item(row, self.NAME_COL).setText(name)
         self.ui.screen_time_table_widget.item(row, self.PATH_COL).setText(path)
-        self.ui.screen_time_table_widget.item(row, self.TIME_ACTUAL_COL).setText(time_mins)
+        self.ui.screen_time_table_widget.item(row, self.TIME_ACTUAL_COL).setText(time_actual)
         self.ui.screen_time_table_widget.item(row, self.TIME_PERCENT_COL).setText(time_percent)
 
         self.ui.screen_time_table_widget.setSortingEnabled(True)
+
+    def update_time_percent(self) -> None:
+        rows = self.ui.screen_time_table_widget.rowCount()
+        for r in range(rows):
+            path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
+            app = self.get_app(path)
+
+            time_percent = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC * 100) / self._total_time_sec
+            print(self._total_time_sec)
+            time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
+
+            self.ui.screen_time_table_widget.item(r, self.TIME_PERCENT_COL).setText(time_percent)
 
     def toggle_app_tracking(self) -> None:
         if self.timer.isActive():
@@ -102,9 +114,11 @@ class ScreenTimeTab(BaseNudgyTab):
             self.timer.start()
 
     def log_application(self) -> None:
-        app_timestamp = AppTimestamp(get_active_window(), int(time.time()))
+        self._total_time_sec += self.REFRESH_RATE_SEC
 
+        app_timestamp = AppTimestamp(get_active_window(), int(time.time()))
         app = self.get_app(app_timestamp.path)
         app.add_timestamp(app_timestamp.query_timestamp)
+
         self.set_row(app)
-        self._total_time_sec += self.REFRESH_RATE_SEC
+        self.update_time_percent()
