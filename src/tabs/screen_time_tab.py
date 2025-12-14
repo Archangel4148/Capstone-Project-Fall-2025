@@ -36,7 +36,9 @@ class ScreenTimeTab(BaseNudgyTab):
         self._total_time_sec: int = 0
 
         for a in self._apps:
-            self._total_time_sec += len(u.get_timestamps()) * self.REFRESH_RATE_SEC
+            self._total_time_sec += len(a.get_timestamps()) * self.REFRESH_RATE_SEC
+
+        for a in self._apps:
             self.set_row(a)
 
         self.api.delete_after_date(self.DELETE_AFTER_DATE)
