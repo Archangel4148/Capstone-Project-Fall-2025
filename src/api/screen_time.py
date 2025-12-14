@@ -23,8 +23,8 @@ class App():
     def get_path(self) -> str:
         return self._path
 
-    def get_timestamps(self) -> list[int]:
-        return self._timestamps
+    def get_timestamps(self, end_time: int=0) -> list[int]:
+        return [t for t in self._timestamps if t > end_time]
 
     def add_timestamp(self, timestamp: int) -> None:
         self._api.add_entry(AppTimestamp(self._path, timestamp))
