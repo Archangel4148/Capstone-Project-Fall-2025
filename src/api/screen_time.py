@@ -46,6 +46,9 @@ class App():
         for t in timestamps:
             self.add_timestamp(t)
 
+    def num_timestamps(self, end_time: int=0) -> int:
+        return len(self.get_timestamps(end_time))
+
 class ScreenTimeAPI:
     def get_application_usage(self, query_end_time: int=0) -> list[App]:
         apps = list()
