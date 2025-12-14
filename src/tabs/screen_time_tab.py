@@ -89,6 +89,7 @@ class ScreenTimeTab(BaseNudgyTab):
         for a in self._apps:
             self._total_time_sec += len(a.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC
 
+        self.update_time_actual()
         self.update_time_percent()
 
     def set_row(self, app: App) -> None:
@@ -115,12 +116,34 @@ class ScreenTimeTab(BaseNudgyTab):
         except ZeroDivisionError:
             pass
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
-        time_percent = str(time_percent).rjust(5, "0")
+        time_percent = str(time_percent).rjust(len("100") + self.DECIMAL_RESOLUTION + 1, "0")
 
         self.ui.screen_time_table_widget.item(row, self.NAME_COL).setText(name)
         self.ui.screen_time_table_widget.item(row, self.PATH_COL).setText(path)
         self.ui.screen_time_table_widget.item(row, self.TIME_ACTUAL_COL).setText(time_actual)
         self.ui.screen_time_table_widget.item(row, self.TIME_PERCENT_COL).setText(time_percent)
+
+        self.ui.screen_time_table_widget.setSortingEnabled(True)
+
+    def update_time_actual(self) -> None:
+        self.ui.screen_time_table_widget.setSortingEnabled(False)
+
+        rows = self.ui.screen_time_table_widget.rowCount()
+        for r in range(rows):
+            path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
+            app = self.get_app(path)
+
+            time_hrs = (len(app.get_timestamps(self.get_history_sec())) * self.REFRESH_RATE_SEC) / (60 * 60)
+            time_mins = (time_hrs - int(time_hrs)) * 60
+            time_sec = (time_mins - int(time_mins)) * 60
+
+            time_hrs = str(int(time_hrs)).rjust(2, "0")
+            time_mins = str(int(time_mins)).rjust(2, "0")
+            time_sec = str(int(time_sec)).rjust(2, "0")
+
+            time_actual = f"{time_hrs}:{time_mins}:{time_sec}"
+
+            self.ui.screen_time_table_widget.item(r, self.TIME_ACTUAL_COL).setText(time_actual)
 
         self.ui.screen_time_table_widget.setSortingEnabled(True)
 
@@ -138,7 +161,7 @@ class ScreenTimeTab(BaseNudgyTab):
             except ZeroDivisionError:
                 pass
             time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
-            time_percent = str(time_percent).rjust(5, "0")
+            time_percent = str(time_percent).rjust(len("100") + self.DECIMAL_RESOLUTION + 1, "0")
 
             self.ui.screen_time_table_widget.item(r, self.TIME_PERCENT_COL).setText(time_percent)
 
