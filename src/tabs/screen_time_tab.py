@@ -32,26 +32,22 @@ class ScreenTimeTab(BaseNudgyTab):
         self.timer.setInterval(self.REFRESH_RATE_MS)
         self.timer.timeout.connect(self.log_application)
 
-        self.ui.screen_time_table_widget.setItem(0, 0, QTableWidgetItem())
-
-        self._usage = ScreenTimeAPI().get_application_usage()
+        self._apps = ScreenTimeAPI().get_application_usage()
         self._total_time_sec: int = 0
 
-        for u in self._usage:
+        for a in self._apps:
             self._total_time_sec += len(u.get_timestamps()) * self.REFRESH_RATE_SEC
-
-        for a in self._usage:
             self.set_row(a)
 
         self.api.delete_after_date(self.DELETE_AFTER_DATE)
 
     def get_app(self, path: str) -> App:
-        for a in self._usage:
+        for a in self._apps:
             if a.get_path() == path:
                 return a
 
-        self._usage.append(App(get_exe_names([path])[path], path))
-        return self._usage[-1]
+        self._apps.append(App(get_exe_names([path])[path], path))
+        return self._apps[-1]
 
     def get_row(self, path: str) -> int:
         rows = self.ui.screen_time_table_widget.findItems(
