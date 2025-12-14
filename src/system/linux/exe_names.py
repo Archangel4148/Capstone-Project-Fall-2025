@@ -4,8 +4,8 @@ import os
 import re
 
 class _MatchExeToDesktop():
-    def __init__(self, exe_paths: str) -> None:
-        self._exe_paths = exe_paths
+    def __init__(self, exe_paths: list[str]) -> None:
+        self._exe_paths = exe_paths.copy()
         self._results = dict()
 
         for e in exe_paths:
