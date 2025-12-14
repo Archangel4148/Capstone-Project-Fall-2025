@@ -77,10 +77,17 @@ class ScreenTimeTab(BaseNudgyTab):
 
     def set_history_sec(self, history_sec: int=0) -> None:
         if history_sec == 0:
-            history_hrs = self.ui.screen_time_history.text()
+            history_hrs = self.ui.screen_time_history.text().strip()
 
             try:
+                if history_hrs == "":
+                    history_sec = sys.maxsize
+
                 history_sec = int(float(history_hrs) * 60 * 60)
+
+                if history_sec <= 0:
+                    history_sec = sys.maxsize
+
             except ValueError:
                 return
 
