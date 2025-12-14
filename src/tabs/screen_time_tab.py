@@ -23,25 +23,28 @@ class ScreenTimeTab(BaseNudgyTab):
     def __init__(self, parent_tab_widget: QTabWidget) -> None:
         super().__init__(parent_tab_widget)
 
+        self._total_time_sec: int = 0
+        self._history_hrs: float = 0
+
         # Create the API endpoint
         self.api = ScreenTimeAPI()
 
         # Make UI connections
         self.ui.update_screen_time_button.pressed.connect(self.toggle_app_tracking)
+        self.ui.screen_time_history.editingFinished.connect(self.set_history_hrs)
         self.timer = QTimer(self)
         self.timer.setInterval(self.REFRESH_RATE_MS)
         self.timer.timeout.connect(self.log_application)
 
+        # Load data
+        self.api.delete_after_date(self.DELETE_AFTER_DATE)
         self._apps = ScreenTimeAPI().get_application_usage()
-        self._total_time_sec: int = 0
 
         for a in self._apps:
             self._total_time_sec += len(a.get_timestamps()) * self.REFRESH_RATE_SEC
 
         for a in self._apps:
             self.set_row(a)
-
-        self.api.delete_after_date(self.DELETE_AFTER_DATE)
 
     def get_app(self, path: str) -> App:
         for a in self._apps:
@@ -69,6 +72,9 @@ class ScreenTimeTab(BaseNudgyTab):
             return row
 
         return rows[0].row()
+
+    def set_history_hrs(self) -> None:
+        pass
 
     def set_row(self, app: App) -> None:
         self.ui.screen_time_table_widget.setSortingEnabled(False)
