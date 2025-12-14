@@ -13,14 +13,15 @@ _app_skip_tracker = 1
 class App():
     SKIP_RATE = 60
 
-    def __init__(self, name: str, path: str, timestamps: list[int]=list()) -> None:
+    def __init__(self, name: str, path: str, timestamps: list[int] | None = None) -> None:
         self._name: str = name
         self._path: str = path
-        self._timestamps: list[int] = list()
+        self._timestamps: list[int] = []
 
-        for t in timestamps:
-            for _ in range(self.SKIP_RATE):
-                self._timestamps.append(t)
+        if timestamps is not None:
+            for t in timestamps:
+                for _ in range(self.SKIP_RATE):
+                    self._timestamps.append(t)
 
         self._api = ScreenTimeAPI()
 
@@ -89,16 +90,16 @@ class ScreenTimeAPI:
         DatabaseService.insert("screen_time", values={"application_path": app.path, "query_timestamp": app.query_timestamp})
 
     def get_usage_percentages(self, apps: list[AppTimestamp]) -> dict[str, float]:
-        usage = dict()
+        usage: dict[AppTimestamp, int] = dict()
 
-        for a in apps:
+        for app in apps:
             try:
-                usage[a] += 1
+                usage[app] += 1
             except KeyError:
-                usage[a] = 1
+                usage[app] = 1
 
-        for u in usage:
-            u /= len(apps)
+        for key in usage.keys():
+            usage[key] /= len(apps)
 
         usage = {k: usage[k] for k in sorted(usage)}
 

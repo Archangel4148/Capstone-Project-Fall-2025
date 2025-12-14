@@ -129,9 +129,10 @@ class ScreenTimeTab(BaseNudgyTab):
             path = self.ui.screen_time_table_widget.item(r, self.PATH_COL).text()
             app = self.get_app(path)
 
-            time_hrs = (app.num_timestamps(self.get_history_sec()) * self.REFRESH_RATE_SEC) / (60 * 60)
-            time_mins = (time_hrs - int(time_hrs)) * 60
-            time_sec = (time_mins - int(time_mins)) * 60
+            total_seconds = (app.num_timestamps(self.get_history_sec()) * self.REFRESH_RATE_SEC)
+            time_hrs = total_seconds // (60 * 60)
+            time_mins = total_seconds // 60
+            time_sec = total_seconds % 60
 
             max_hrs_len = int(math.log10(self.DELETE_AFTER_DAYS * 24)) + 1
             time_hrs = str(round(time_hrs)).rjust(max_hrs_len, "0")
