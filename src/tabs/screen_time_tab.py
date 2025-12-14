@@ -127,9 +127,9 @@ class ScreenTimeTab(BaseNudgyTab):
             time_sec = (time_mins - int(time_mins)) * 60
 
             max_hrs_len = int(math.log10(self.DELETE_AFTER_DAYS * 24)) + 1
-            time_hrs = str(int(time_hrs)).rjust(max_hrs_len, "0")
-            time_mins = str(int(time_mins)).rjust(2, "0")
-            time_sec = str(int(time_sec)).rjust(2, "0")
+            time_hrs = str(round(time_hrs)).rjust(max_hrs_len, "0")
+            time_mins = str(round(time_mins)).rjust(2, "0")
+            time_sec = str(round(time_sec)).rjust(2, "0")
 
             time_actual = f"{time_hrs}:{time_mins}:{time_sec}"
 
