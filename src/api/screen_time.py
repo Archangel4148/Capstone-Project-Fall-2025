@@ -35,7 +35,7 @@ class App():
             self.add_timestamp(t)
 
 class ScreenTimeAPI:
-    def get_application_usage(self, query_end_time=0) -> list[App]:
+    def get_application_usage(self, query_end_time: int=0) -> list[App]:
         apps = list()
         query_end_time = str(query_end_time)
 
@@ -63,7 +63,7 @@ class ScreenTimeAPI:
 
         return apps
 
-    def delete_after_date(self, end_time=0) -> None:
+    def delete_after_date(self, end_time: int=0) -> None:
         end_time = str(end_time)
         DatabaseService.delete("screen_time", conditions=[("query_timestamp", "<", end_time)])
 

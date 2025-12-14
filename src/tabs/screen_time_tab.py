@@ -74,15 +74,18 @@ class ScreenTimeTab(BaseNudgyTab):
 
         name = app.get_name()
         path = app.get_path()
+
         time_mins = (len(app.get_timestamps()) * self.REFRESH_RATE_SEC) / 60
-        time_mins = str(round(time_mins, self.DECIMAL_RESOLUTION))
+        time_sec = (time_mins - int(time_mins)) * 60
+        time_mins = f"{int(time_mins)}:{time_sec}"
+
         time_percent = len(app.get_timestamps()) * 100 / self._total_time_sec
         time_percent = str(round(time_percent, self.DECIMAL_RESOLUTION))
 
-        self.ui.screen_time_table_widget.item(row, 0).setText(name)
-        self.ui.screen_time_table_widget.item(row, 1).setText(path)
-        self.ui.screen_time_table_widget.item(row, 2).setText(time_mins)
-        self.ui.screen_time_table_widget.item(row, 3).setText(time_percent)
+        self.ui.screen_time_table_widget.item(row, self.NAME_COL).setText(name)
+        self.ui.screen_time_table_widget.item(row, self.PATH_COL).setText(path)
+        self.ui.screen_time_table_widget.item(row, self.TIME_ACTUAL_COL).setText(time_mins)
+        self.ui.screen_time_table_widget.item(row, self.TIME_PERCENT_COL).setText(time_percent)
 
         self.ui.screen_time_table_widget.setSortingEnabled(True)
 
@@ -98,3 +101,4 @@ class ScreenTimeTab(BaseNudgyTab):
         app = self.get_app(app_timestamp.path)
         app.add_timestamp(app_timestamp.query_timestamp)
         self.set_row(app)
+        self._total_time_sec += self.REFRESH_RATE_SEC
