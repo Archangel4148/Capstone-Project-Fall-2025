@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QTabWidget, QLabel, QPushButton, QWidget, QHBoxLayou
 
 
 from api.timer import TimerTabAPI
+from notifications import NotificationManager
 from sound import play_looping_sound
 from tabs.base_tab import BaseNudgyTab
 from ui.timer_tab_init import Ui_timer_tab
@@ -51,7 +52,7 @@ class TimerTab(BaseNudgyTab):
         self.ui.pause_resume_button.pressed.connect(self.pause_resume_timer)
         self.ui.save_button.pressed.connect(self.save_timer)
 
-        
+
     @staticmethod
     def format_time(seconds: float) -> str:
         # Format the time as MM:SS.HH
@@ -112,6 +113,9 @@ class TimerTab(BaseNudgyTab):
             self.ui.start_time_line_edit.setText(str(new_value))
             self.active_timer.duration_sec = new_value
 
+            self.set_main_timer(
+                Timer("", self.active_timer.duration_sec, self.active_timer.is_main_timer)
+            )
             self.reset_timer()
 
         except ValueError:
@@ -133,7 +137,6 @@ class TimerTab(BaseNudgyTab):
             self.update_display()
 
     def timer_finished(self):
-        print("TIMER FINISHED")
         # Start alarm sound
         self.stop_alarm_callback = play_looping_sound(r"src/assets/alarm.wav")
 
@@ -145,6 +148,12 @@ class TimerTab(BaseNudgyTab):
         # UI updates
         self.ui.start_stop_button.setText("Stop Alarm")
         self.ui.pause_resume_button.setEnabled(False)
+
+        formatted_timer_name = ""
+        if self.active_timer.name != "":
+            formatted_timer_name = f'"{self.active_timer.name}" '
+
+        NotificationManager.notify("Timer Finished", f"Your timer {formatted_timer_name}has finished!\nReturn to the application to disable it.")
 
         self.timer_obj.stop()
 
@@ -233,5 +242,5 @@ class TimerTab(BaseNudgyTab):
             self._add_timer_to_scroll_area(timer)
             if timer.is_main_timer:
                 self.set_main_timer(timer)
-        
+
         return bool(all_timers)
