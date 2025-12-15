@@ -28,6 +28,7 @@ Nudgy uses a SQLite database, stored locally in `nudgy_database.db`.
 * [Python 3](https://www.python.org)
 * [pywin32](https://mhammond.github.io/pywin32)
 * [SQLite](https://sqlite.org)
+* [notify.py](https://pypi.org/project/notify_py/)
 
 #### Compiling
 1. Run `make.exe compile`. Builds will appear in the `bin` directory.
