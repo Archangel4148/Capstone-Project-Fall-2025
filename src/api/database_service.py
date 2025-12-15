@@ -1,14 +1,30 @@
+from pathlib import Path
 import re
 import sqlite3
 
 QUERY_PLACEHOLDER = "?"  # This is defined by SQLite
-
+PARENT_DIR = Path(__file__).resolve().parent
 
 class DatabaseService:
+    DB_PATH = PARENT_DIR / "nudgy_database.db"
+    _connections: list[sqlite3.Connection] = []
+
     @classmethod
     def connect(cls) -> sqlite3.Connection:
         """Connects to the database, returning the connection object"""
-        return sqlite3.connect("nudgy_database.db")
+        conn = sqlite3.connect(cls.DB_PATH)
+        cls._connections.append(conn)
+        return conn
+
+    @classmethod
+    def close_all_connections(cls):
+        """Close all tracked connections and clear the list."""
+        for conn in cls._connections:
+            try:
+                conn.close()
+            except Exception:
+                pass
+        cls._connections.clear()
 
     @classmethod
     def initialize(cls):

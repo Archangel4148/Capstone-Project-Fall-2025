@@ -5,3 +5,5 @@ releases/
 __pycache__/
 .idea/
 *.db
+htmlcov
+.coverage
