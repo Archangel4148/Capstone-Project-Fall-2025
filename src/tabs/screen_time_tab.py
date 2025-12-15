@@ -40,7 +40,7 @@ class ScreenTimeTab(BaseNudgyTab):
         # Load data
         self._apps = ScreenTimeAPI().get_application_usage()
 
-        self.set_history_sec(sys.maxsize)
+        self.set_history_sec()
 
         for a in self._apps:
             self.set_row(a)
@@ -75,21 +75,22 @@ class ScreenTimeTab(BaseNudgyTab):
 
         return rows[0].row()
 
-    def set_history_sec(self, history_sec: int=0) -> None:
-        if history_sec == 0:
+    def set_history_sec(self, history_sec: int | None=None) -> None:
+        if history_sec == None:
             history_hrs = self.ui.screen_time_history.text().strip()
 
-            try:
-                if history_hrs == "":
-                    history_sec = sys.maxsize
+            if history_hrs != "":
+                try:
+                    history_sec = int(float(history_hrs) * 60 * 60)
 
-                history_sec = int(float(history_hrs) * 60 * 60)
+                except ValueError:
+                    return
 
-                if history_sec <= 0:
-                    history_sec = sys.maxsize
+                if history_sec <= 0 or history_sec > self.DELETE_AFTER_SEC:
+                    history_sec = self.DELETE_AFTER_SEC
 
-            except ValueError:
-                return
+            else:
+                history_sec = self.DELETE_AFTER_SEC
 
         if history_sec == self._history_sec:
             return
