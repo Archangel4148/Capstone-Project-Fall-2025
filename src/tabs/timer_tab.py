@@ -52,7 +52,7 @@ class TimerTab(BaseNudgyTab):
         self.ui.pause_resume_button.pressed.connect(self.pause_resume_timer)
         self.ui.save_button.pressed.connect(self.save_timer)
 
-        
+
     @staticmethod
     def format_time(seconds: float) -> str:
         # Format the time as MM:SS.HH
@@ -146,7 +146,11 @@ class TimerTab(BaseNudgyTab):
         self.ui.start_stop_button.setText("Stop Alarm")
         self.ui.pause_resume_button.setEnabled(False)
 
-        NotificationManager.notify(title="Timer Finished", message=f"Your timer \"{self.active_timer.name}\" has finished!\nReturn to the application to disable it.")
+        formatted_timer_name = ""
+        if self.active_timer.name != "":
+            formatted_timer_name = f'"{self.active_timer.name}" '
+
+        NotificationManager.notify("Timer Finished", f"Your timer {formatted_timer_name}has finished!\nReturn to the application to disable it.")
 
         self.timer_obj.stop()
 
@@ -235,5 +239,5 @@ class TimerTab(BaseNudgyTab):
             self._add_timer_to_scroll_area(timer)
             if timer.is_main_timer:
                 self.set_main_timer(timer)
-        
+
         return bool(all_timers)
