@@ -21,4 +21,4 @@ release: compile # compile and compress program
 	mv releases\main.tar.gz "releases\main-$$(([datetimeoffset](date)).tounixtimeseconds()).tar.gz"
 
 run: compile # compile and run program
-	bin\nudgy.py
+	python bin\nudgy.py

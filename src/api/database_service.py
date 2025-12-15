@@ -1,14 +1,17 @@
+from pathlib import Path
 import re
 import sqlite3
 
 QUERY_PLACEHOLDER = "?"  # This is defined by SQLite
 
+# Ensure the database is in this file's parent directory, regardless of working directory
+DB_PATH = Path(__file__).resolve().parent / "nudgy_database.db"  
 
 class DatabaseService:
     @classmethod
     def connect(cls) -> sqlite3.Connection:
         """Connects to the database, returning the connection object"""
-        return sqlite3.connect("nudgy_database.db")
+        return sqlite3.connect(DB_PATH)
 
     @classmethod
     def initialize(cls):

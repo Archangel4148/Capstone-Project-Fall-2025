@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QTabWidget, QLabel, QPushButton, QWidget, QHBoxLayou
 
 
 from api.timer import TimerTabAPI
+from notifications import NotificationManager
 from sound import play_looping_sound
 from tabs.base_tab import BaseNudgyTab
 from ui.timer_tab_init import Ui_timer_tab
@@ -133,7 +134,6 @@ class TimerTab(BaseNudgyTab):
             self.update_display()
 
     def timer_finished(self):
-        print("TIMER FINISHED")
         # Start alarm sound
         self.stop_alarm_callback = play_looping_sound(r"src/assets/alarm.wav")
 
@@ -145,6 +145,8 @@ class TimerTab(BaseNudgyTab):
         # UI updates
         self.ui.start_stop_button.setText("Stop Alarm")
         self.ui.pause_resume_button.setEnabled(False)
+
+        NotificationManager.notify(title="Timer Finished", message=f"Your timer \"{self.active_timer.name}\" has finished!\nReturn to the application to disable it.")
 
         self.timer_obj.stop()
 
