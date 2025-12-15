@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-# Add the src folder to sys.path
+# Add the src folder to sys.path (fixes import issues with pytest)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
 from api.database_service import DatabaseService
@@ -27,5 +27,5 @@ def temp_db():
     try:
         db_file.unlink()
     except PermissionError:
-        print(f"Could not delete {db_file} – it may still be in use.")
+        print(f"Could not delete {db_file}, it may still be in use.")
     DatabaseService.DB_PATH = original_path
