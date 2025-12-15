@@ -113,6 +113,9 @@ class TimerTab(BaseNudgyTab):
             self.ui.start_time_line_edit.setText(str(new_value))
             self.active_timer.duration_sec = new_value
 
+            self.set_main_timer(
+                Timer("", self.active_timer.duration_sec, self.active_timer.is_main_timer)
+            )
             self.reset_timer()
 
         except ValueError:
