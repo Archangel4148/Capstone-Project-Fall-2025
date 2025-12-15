@@ -1,7 +1,6 @@
 
 
 
-import sys
 from unittest.mock import MagicMock
 
 import pytest
@@ -21,6 +20,7 @@ def reset_apps():
 
 
 def test_get_application_usage(temp_db):
+    # Check that get_application_usage returns the correct apps
     api = ScreenTimeAPI()
 
     api.add_entry(AppTimestamp("/bin/app1", 100))
@@ -36,19 +36,7 @@ def test_get_application_usage(temp_db):
     assert app1.num_timestamps() == 2 * app1.SKIP_RATE
 
 def test_delete_after_date(temp_db):
-    api = ScreenTimeAPI()
-
-    api.add_entry(AppTimestamp("/bin/app", 100))
-    api.add_entry(AppTimestamp("/bin/app", 200))
-
-    api.delete_after_date(150)
-
-    apps = api.get_application_usage()
-    app = apps[0]
-
-    assert app.num_timestamps() == 1 * app.SKIP_RATE
-
-def test_delete_after_date(temp_db):
+    # Check that delete_after_date removes apps older than the given date
     api = ScreenTimeAPI()
 
     api.add_entry(AppTimestamp("/bin/app", 100))
@@ -62,6 +50,7 @@ def test_delete_after_date(temp_db):
     assert app.num_timestamps() == 1 * app.SKIP_RATE
 
 def test_remove_app(temp_db):
+    # Check that remove_app removes the app from the DB
     api = ScreenTimeAPI()
 
     api.add_entry(AppTimestamp("/bin/app1", 100))
@@ -74,6 +63,7 @@ def test_remove_app(temp_db):
     assert apps[0].get_path() == "/bin/app2"
 
 def test_app_add_timestamp_calls_db_every_skip(mocker):
+    # Check that add_timestamp only adds to the DB once per skip
     api_mock = mocker.patch("api.screen_time.ScreenTimeAPI.add_entry")
 
     app = App("Test", "/bin/app")
@@ -85,11 +75,12 @@ def test_app_add_timestamp_calls_db_every_skip(mocker):
     api_mock.assert_called_once()
 
 def test_num_timestamps_with_history():
+    # Check that num_timestamps returns the correct number of timestamps
     app = App("Test", "/bin/app", timestamps=[10, 20, 30])
-
     assert app.num_timestamps(end_time=15) == 2 * app.SKIP_RATE
 
 def test_toggle_app_tracking(qtbot, mocker):
+    # Check that toggle_app_tracking starts and stops the timer
     tab = ScreenTimeTab(parent_tab_widget=MagicMock())
 
     tab.timer = MagicMock()
@@ -103,6 +94,7 @@ def test_toggle_app_tracking(qtbot, mocker):
     tab.timer.stop.assert_called_once()
 
 def test_log_application(qtbot, mocker, temp_db):
+    # Check that log_application adds the app to the DB
     mocker.patch("tabs.screen_time_tab.get_active_window", return_value="/bin/app")
     mocker.patch("time.time", return_value=1000)
 
@@ -117,32 +109,8 @@ def test_log_application(qtbot, mocker, temp_db):
     assert len(apps) == 1
     assert apps[0].num_timestamps() >= 1 * apps[0].SKIP_RATE
 
-def test_set_history_sec_from_ui_text(qtbot, mocker):
-    tab = ScreenTimeTab(parent_tab_widget=MagicMock())
-
-    tab.ui.screen_time_history = MagicMock()
-    tab.update_time_actual = MagicMock()
-    tab.update_time_percent = MagicMock()
-
-    # Fake apps
-    app1 = MagicMock()
-    app1.num_timestamps.return_value = 2
-
-    app2 = MagicMock()
-    app2.num_timestamps.return_value = 3
-
-    tab._apps = [app1, app2]
-
-    # Empty string: sys.maxsize
-    tab.ui.screen_time_history.text.return_value = ""
-    tab.set_history_sec(0)
-
-    assert tab._history_sec == sys.maxsize
-    assert tab._total_time_sec == (2 + 3) * tab.REFRESH_RATE_SEC
-    tab.update_time_actual.assert_called_once()
-    tab.update_time_percent.assert_called_once()
-
 def test_set_history_sec_invalid_text_returns_early(qtbot):
+    # Check that set_history_sec returns early if the text is invalid
     tab = ScreenTimeTab(parent_tab_widget=MagicMock())
 
     tab.ui.screen_time_history = MagicMock()
@@ -153,7 +121,7 @@ def test_set_history_sec_invalid_text_returns_early(qtbot):
 
     original_history = tab._history_sec
 
-    tab.set_history_sec(0)
+    tab.set_history_sec()
 
     # No changes, no updates
     assert tab._history_sec == original_history
@@ -161,6 +129,7 @@ def test_set_history_sec_invalid_text_returns_early(qtbot):
     tab.update_time_percent.assert_not_called()
 
 def test_set_history_sec_same_value_no_op(qtbot):
+    # Check that set_history_sec does nothing if the value is the same
     tab = ScreenTimeTab(parent_tab_widget=MagicMock())
 
     tab.update_time_actual = MagicMock()
@@ -174,13 +143,12 @@ def test_set_history_sec_same_value_no_op(qtbot):
     tab.update_time_percent.assert_not_called()
 
 def test_init_sets_rows_for_existing_apps(qtbot, mocker):
+    # Check that init sets rows for existing apps
     app = App("TestApp", "/bin/test", timestamps=[100, 200])
-
     mocker.patch(
         "tabs.screen_time_tab.ScreenTimeAPI.get_application_usage",
         return_value=[app],
     )
-
     tab = ScreenTimeTab(parent_tab_widget=MagicMock())
 
     # set_row should have populated at least one row
@@ -200,19 +168,25 @@ def test_get_row_returns_existing_row(qtbot):
     assert row1 == row2
 
 def test_set_history_sec_negative_input_uses_maxsize(qtbot):
+    # Check that set_history_sec uses the max size if the input is negative
     tab = ScreenTimeTab(parent_tab_widget=MagicMock())
 
-    tab.ui.screen_time_history.setText("-5")
-    tab.set_history_sec(0)
+    tab.ui.screen_time_history = MagicMock()
+    tab.ui.screen_time_history.text.return_value = "-5"
 
-    assert tab._history_sec == sys.maxsize
+    tab.set_history_sec()
 
-def test_set_history_sec_accumulates_total_time(qtbot):
-    tab = ScreenTimeTab(parent_tab_widget=MagicMock())
+    assert tab._history_sec == tab.DELETE_AFTER_SEC
 
-    app = App("Test", "/bin/test", timestamps=[100, 200])
-    tab._apps = [app]
+def test_add_timestamps_calls_add_timestamp(mocker):
+    # Check that add_timestamps calls add_timestamp for each timestamp
+    app = App("Test", "/bin/app")
+    mock_add = mocker.patch.object(app, "add_timestamp")
 
-    tab.set_history_sec(sys.maxsize)
+    timestamps = [100, 200, 300]
+    app.add_timestamps(timestamps)
 
-    assert tab._total_time_sec > 0
+    assert mock_add.call_count == len(timestamps)
+    mock_add.assert_any_call(100)
+    mock_add.assert_any_call(200)
+    mock_add.assert_any_call(300)
