@@ -20,9 +20,13 @@ class CalendarTab(BaseNudgyTab):
         date = self.ui.calendar_widget.selectedDate().toString("yyyy-MM-dd")
         self.ui.date_label.setText(date)
         self.ui.event_list.clear()
-        for item in self.api.get_events_for_day(date):
-            event_display_string = f"{item.event_name} ({item.duration} minutes)\n{item.event_description}\n"
-            self.ui.event_list.addItem(event_display_string)
+        events = self.api.get_events_for_day(date)
+        if events:
+            for item in events:
+                event_display_string = f"{item.event_name} ({item.duration} minutes)\n{item.event_description}\n"
+                self.ui.event_list.addItem(event_display_string)
+        else:
+            self.ui.event_list.addItem("No events for today!")
 
     def add_calendar_item(self, calendar_item: CalendarItem):
         # Don't add duplicate items
