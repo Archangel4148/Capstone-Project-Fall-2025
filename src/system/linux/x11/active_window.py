@@ -8,14 +8,25 @@ def get_active_window() -> str:
     # doesn't support flatpak since it runs in a protected environment.
     proc = subprocess.Popen(["xdotool", "getactivewindow"], stdout=subprocess.PIPE).stdout.read()
     encoding = chardet.detect(proc)["encoding"]
-    proc = str(proc, encoding=encoding).strip()
+    try:
+        proc = str(proc, encoding=encoding).strip()
+    except TypeError:
+        return ""
 
     proc = subprocess.Popen(["xdotool", "getwindowpid", proc], stdout=subprocess.PIPE).stdout.read()
     encoding = chardet.detect(proc)["encoding"]
-    pid = str(proc, encoding=encoding).strip()
+    try:
+        pid = str(proc, encoding=encoding).strip()
+    except TypeError:
+        return ""
+
     pid = int(pid)
 
-    path = psutil.Process(pid).exe()
+    try:
+        path = psutil.Process(pid).exe()
+    except psutil.AccessDenied:
+        return ""
+
     path = os.path.realpath(path)
 
     return path
