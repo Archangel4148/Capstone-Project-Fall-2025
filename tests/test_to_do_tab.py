@@ -27,7 +27,7 @@ def make_todo_item(
     )
 
 
-def test_add_and_get_all_items(clean_todo_table):
+def test_add_and_get_all_items(temp_db, clean_todo_table):
     # Check that adding an item and getting all items works
     api = ToDoListAPI()
     item = To_Do_Item(1, "Homework", "2025-01-01", False)
@@ -39,7 +39,7 @@ def test_add_and_get_all_items(clean_todo_table):
     assert items[0].description == "Homework"
 
 
-def test_delete_item(clean_todo_table):
+def test_delete_item(temp_db, clean_todo_table):
     # Check that deleting an item removes it from the DB
     api = ToDoListAPI()
     item = To_Do_Item(1, "Chores", "2025-01-02", False)
@@ -50,7 +50,7 @@ def test_delete_item(clean_todo_table):
     items = api.get_all_items()
     assert items == []
 
-def test_tab_loads_saved_items(qtbot, clean_todo_table):
+def test_tab_loads_saved_items(temp_db, qtbot, clean_todo_table):
     # Check that creating a new ToDoListTab loads items from the DB
     api = ToDoListAPI()
     api.add_item(To_Do_Item(1, "Test Task", "2025-01-01", False))
@@ -60,7 +60,7 @@ def test_tab_loads_saved_items(qtbot, clean_todo_table):
     assert tab.ui.listWidget.count() == 1
     assert "Test Task" in tab.ui.listWidget.item(0).text()
 
-def test_add_item_adds_to_db_and_ui(qtbot, mocker):
+def test_add_item_adds_to_db_and_ui(temp_db, qtbot, mocker):
     # Check that tab.addItem() adds to the list widget
     tab = ToDoListTab(parent_tab_widget=MagicMock())
 
@@ -82,7 +82,7 @@ def test_add_item_adds_to_db_and_ui(qtbot, mocker):
     api_instance.add_item.assert_called_once()
     tab.ui.listWidget.addItem.assert_called_once()
 
-def test_delete_item_removes_from_db_and_ui(qtbot, mocker):
+def test_delete_item_removes_from_db_and_ui(temp_db, qtbot, mocker):
     # Check that deleting an item removes it from the UI and deletes from the DB
     tab = ToDoListTab(parent_tab_widget=MagicMock())
 

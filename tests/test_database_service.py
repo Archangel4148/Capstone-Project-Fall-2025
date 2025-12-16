@@ -7,7 +7,7 @@ from api.database_service import DatabaseService, build_condition_suffix, valida
 def reset_db(tmp_path):
     # Use a temp database for tests
     DatabaseService.DB_PATH = tmp_path / "test.db"
-    DatabaseService._connections.clear()
+    DatabaseService.close_all_connections()
 
 def test_connect_and_close():
     # Test connection and closing updates connection list

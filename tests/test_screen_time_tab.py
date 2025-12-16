@@ -10,7 +10,7 @@ from api.screen_time import App, AppTimestamp, ScreenTimeAPI
 from tabs.screen_time_tab import ScreenTimeTab
 
 @pytest.fixture(autouse=True)
-def reset_apps():
+def reset_apps(temp_db):
     # Reset the DB and the app_skip_tracker
     screen_time._app_skip_tracker = 1
     DatabaseService.delete(

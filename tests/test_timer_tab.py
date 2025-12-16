@@ -2,7 +2,6 @@ import pytest
 from unittest.mock import MagicMock
 from tabs.timer_tab import TimerTab
 from api.timer import Timer, TimerTabAPI
-from api.database_service import DatabaseService
 
 
 def test_format_time():
@@ -11,7 +10,7 @@ def test_format_time():
     assert TimerTab.format_time(0) == "00:00.00"
 
 
-def test_blink_label_toggles_colors(qtbot):
+def test_blink_label_toggles_colors(qtbot, temp_db):
     # Check if the blink state updates properly with _blink_label
     tab = TimerTab(parent_tab_widget=MagicMock())
     tab.ui.timer_label = MagicMock()
@@ -23,7 +22,7 @@ def test_blink_label_toggles_colors(qtbot):
     assert tab.blink_state is False
 
 
-def test_reset_timer_sets_state(qtbot, mocker):
+def test_reset_timer_sets_state(qtbot, mocker, temp_db):
     # Check if resetting the timer resets the button text and stops the alarm
     tab = TimerTab(parent_tab_widget=MagicMock())
     tab.ui.start_stop_button = MagicMock()
@@ -53,7 +52,7 @@ def test_reset_timer_sets_state(qtbot, mocker):
     tab.ui.timer_label.setStyleSheet.assert_called_with("color: black;")
 
 
-def test_add_and_check_timer_in_db():
+def test_add_and_check_timer_in_db(temp_db):
     # Check if api.add_timer() successfully adds the timer to the DB
     api = TimerTabAPI()
     t = Timer("MyTimer", 10, True)
@@ -66,7 +65,7 @@ def test_add_and_check_timer_in_db():
     assert any(timer.name == "MyTimer" for timer in timers)
 
 
-def test_timer_finished_triggers(mocker, qtbot):
+def test_timer_finished_triggers(mocker, qtbot, temp_db):
     # Test that the alarm triggers on timer finish
     tab = TimerTab(parent_tab_widget=MagicMock())
     tab.ui.start_stop_button = MagicMock()
@@ -82,7 +81,7 @@ def test_timer_finished_triggers(mocker, qtbot):
     mock_sound.assert_called_once()
 
 
-def test_timer_duration_edited_valid_and_invalid(qtbot):
+def test_timer_duration_edited_valid_and_invalid(qtbot, temp_db):
     # Check that editing the text successfully updates values, and that invalid inputs are ignored
     tab = TimerTab(parent_tab_widget=MagicMock())
     tab.ui.start_time_line_edit = MagicMock()
@@ -99,7 +98,7 @@ def test_timer_duration_edited_valid_and_invalid(qtbot):
     assert tab.active_timer.duration_sec == 12.34
 
 
-def test_add_timer_calls_callbacks(qtbot, ):
+def test_add_timer_calls_callbacks(qtbot, temp_db):
     # Check that the buttons all successfully trigger timer adding/loading
     tab = TimerTab(parent_tab_widget=MagicMock())
     
@@ -244,3 +243,35 @@ def test_delete_timer_removes_from_db(temp_db):
 
     all_timers = api.get_all_timers()
     assert all(timer.name != "DeleteMe" for timer in all_timers)
+
+def test_load_timers_calls_add_and_set_main(mocker, qtbot, temp_db):
+    from tabs.timer_tab import TimerTab
+    from api.timer import Timer
+
+    # Create a TimerTab instance
+    tab = TimerTab(parent_tab_widget=MagicMock())
+
+    # Mock methods to track calls
+    tab._add_timer_to_scroll_area = mocker.Mock()
+    tab.set_main_timer = mocker.Mock()
+
+    # Prepare fake timers
+    timer1 = Timer("Timer1", 5, False)
+    timer2 = Timer("MainTimer", 10, True)  # is_main_timer = True
+
+    # Patch get_all_timers to return our fake timers
+    mocker.patch.object(tab.api, "get_all_timers", return_value=[timer1, timer2])
+
+    # Call load_timers
+    result = tab.load_timers()
+
+    # Should return True because timers exist
+    assert result is True
+
+    # _add_timer_to_scroll_area should be called for both timers
+    tab._add_timer_to_scroll_area.assert_any_call(timer1)
+    tab._add_timer_to_scroll_area.assert_any_call(timer2)
+    assert tab._add_timer_to_scroll_area.call_count == 2
+
+    # set_main_timer should be called only for the main timer
+    tab.set_main_timer.assert_called_once_with(timer2)
