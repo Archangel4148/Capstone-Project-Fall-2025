@@ -6,7 +6,7 @@ import pytest
 from system.active_window import get_active_window
 from system.exe_names import get_exe_names
 
-
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
 def test_get_active_window_linux(mocker):
     # Test that get_active_window returns the correct window name on Linux
     mock_active = mocker.patch("system.linux.active_window.get_active_window", return_value="LinuxWindow")
@@ -17,28 +17,18 @@ def test_get_active_window_linux(mocker):
     assert result == "LinuxWindow"
     mock_active.assert_called_once()
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows-only test")
+def test_get_active_window_win32(mocker):
+    # Test that get_active_window returns the correct window name on Windows
+    mock_active = mocker.patch("system.win.active_window.get_active_window", return_value="WinWindow")
 
-# def test_get_active_window_win32(mocker):
-#     # Test that get_active_window returns the correct window name on Windows
-#     mock_active = mocker.patch("system.win.active_window.get_active_window", return_value="WinWindow")
-
-#     with patch("sys.platform", "win32"):
-#         result = get_active_window()
-
-#     assert result == "WinWindow"
-#     mock_active.assert_called_once()
-def test_get_active_window_win32():
-    fake_module = type(sys)("system.win.active_window")
-    fake_module.get_active_window = lambda: "WinWindow"
-
-    with patch.dict(sys.modules, {
-        "system.win.active_window": fake_module
-    }):
-        with patch.object(sys, "platform", "win32"):
-            result = get_active_window()
+    with patch("sys.platform", "win32"):
+        result = get_active_window()
 
     assert result == "WinWindow"
+    mock_active.assert_called_once()
 
+@pytest.mark.skipif(sys.platform != "linux", reason="Linux-only test")
 def test_get_exe_names_linux():
     fake_paths = ["/usr/bin/foo", "/usr/bin/bar"]
     fake_return = {"foo": "FooApp", "bar": "BarApp"}
@@ -53,6 +43,7 @@ def test_get_exe_names_linux():
             mock_func.assert_called_once_with(fake_paths)
             assert result == fake_return
 
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows-only test")
 def test_get_exe_names_win32():
     fake_paths = ["C:\\Program Files\\Foo.exe"]
     fake_return = {"Foo.exe": "FooApp"}
