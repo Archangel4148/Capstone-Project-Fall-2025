@@ -5,7 +5,7 @@ import re
 
 class _MatchExeToDesktop():
     def __init__(self, exe_paths: list[str]) -> None:
-        self._exe_paths = exe_paths.copy()
+        self._exe_paths = [e for e in exe_paths if e.strip() != ""]
         self._results = dict()
 
         for e in exe_paths:
