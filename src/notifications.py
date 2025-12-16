@@ -12,6 +12,3 @@ class NotificationManager:
         n.title = title
         n.message = message
         n.send()
-
-if __name__ == "__main__":
-    NotificationManager.notify("Lovely Title", "Here's a lovely message")

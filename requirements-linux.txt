@@ -1,0 +1,8 @@
+chardet
+psutil
+PyQt5
+notify-py
+pytest
+pytest-qt
+pytest-cov
+pytest-mock

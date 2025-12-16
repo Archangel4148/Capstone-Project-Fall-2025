@@ -88,20 +88,3 @@ class ScreenTimeAPI:
 
     def add_entry(self, app: AppTimestamp):
         DatabaseService.insert("screen_time", values={"application_path": app.path, "query_timestamp": app.query_timestamp})
-
-    def get_usage_percentages(self, apps: list[AppTimestamp]) -> dict[str, float]:
-        usage: dict[AppTimestamp, int] = dict()
-
-        for app in apps:
-            try:
-                usage[app] += 1
-            except KeyError:
-                usage[app] = 1
-
-        for key in usage.keys():
-            usage[key] /= len(apps)
-
-        usage = {k: usage[k] for k in sorted(usage)}
-
-
-    #     return usage

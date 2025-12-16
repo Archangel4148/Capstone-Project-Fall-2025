@@ -5,4 +5,7 @@ releases/
 __pycache__/
 .idea/
 *.db
+htmlcov
+.coverage
 .venv/
+.pytest_cache/

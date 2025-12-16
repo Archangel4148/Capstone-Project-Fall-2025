@@ -22,3 +22,6 @@ release: compile # compile and compress program
 
 run: compile # compile and run program
 	python bin\nudgy.py
+
+test: # run pytest and remove temp DB afterwards
+	pytest --rootdir=. --cov=src --cov-report=html tests
