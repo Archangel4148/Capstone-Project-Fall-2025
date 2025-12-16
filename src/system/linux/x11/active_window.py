@@ -15,7 +15,11 @@ def get_active_window() -> str:
     pid = str(proc, encoding=encoding).strip()
     pid = int(pid)
 
-    path = psutil.Process(pid).exe()
+    path = ""
+    try:
+        path = psutil.Process(pid).exe()
+    except psutil.AccessDenied:
+        pass
     path = os.path.realpath(path)
 
     return path
