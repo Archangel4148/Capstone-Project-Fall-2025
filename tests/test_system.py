@@ -18,15 +18,26 @@ def test_get_active_window_linux(mocker):
     mock_active.assert_called_once()
 
 
-def test_get_active_window_win32(mocker):
-    # Test that get_active_window returns the correct window name on Windows
-    mock_active = mocker.patch("system.win.active_window.get_active_window", return_value="WinWindow")
+# def test_get_active_window_win32(mocker):
+#     # Test that get_active_window returns the correct window name on Windows
+#     mock_active = mocker.patch("system.win.active_window.get_active_window", return_value="WinWindow")
 
-    with patch("sys.platform", "win32"):
-        result = get_active_window()
+#     with patch("sys.platform", "win32"):
+#         result = get_active_window()
+
+#     assert result == "WinWindow"
+#     mock_active.assert_called_once()
+def test_get_active_window_win32():
+    fake_module = type(sys)("system.win.active_window")
+    fake_module.get_active_window = lambda: "WinWindow"
+
+    with patch.dict(sys.modules, {
+        "system.win.active_window": fake_module
+    }):
+        with patch.object(sys, "platform", "win32"):
+            result = get_active_window()
 
     assert result == "WinWindow"
-    mock_active.assert_called_once()
 
 def test_get_exe_names_linux():
     fake_paths = ["/usr/bin/foo", "/usr/bin/bar"]
@@ -59,5 +70,3 @@ def test_get_exe_names_unsupported():
     with patch.object(sys, "platform", "unsupported_os"):
         with pytest.raises(ValueError, match="Unsupported operating system: unsupported_os"):
             get_exe_names(fake_paths)
-
-# NOTE: I couldn't find a way to test the lower-level functions for linux, so I am skipping them (they're OS-specific anyway)
