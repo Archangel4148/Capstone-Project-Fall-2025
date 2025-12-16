@@ -1,3 +1,5 @@
+chardet
+psutil
 PyQt5
 notify-py
 pytest
