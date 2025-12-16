@@ -37,7 +37,7 @@ class CalendarAPI:
         target_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
         # Format the target date to compare it with the date part of 'datetime'
-        formatted_target_date = target_date.strftime("%Y-%m-%d")
+        formatted_target_date = target_date.strftime("%m/%d/%Y")
 
         # Define the condition to filter by date (matching only the date part of the 'datetime')
         conditions = [("datetime", "LIKE", f"{formatted_target_date}%")]
