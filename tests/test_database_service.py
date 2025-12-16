@@ -5,7 +5,7 @@ from api.database_service import DatabaseService, build_condition_suffix, valida
 
 @pytest.fixture(autouse=True)
 def reset_db(tmp_path):
-    # Use a temp database for tests
+    # Clear everything so the DB is clean for testing
     DatabaseService.DB_PATH = tmp_path / "test.db"
     DatabaseService.close_all_connections()
 

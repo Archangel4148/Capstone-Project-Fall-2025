@@ -11,6 +11,7 @@ def reset_active_sounds():
 
 
 def test_play_sound_sets_properties_and_calls_cleanup():
+    # Make sure play_sound sets things up correctly
     mock_sound = MagicMock()
     with patch("sound.QSoundEffect", return_value=mock_sound):
         sound.play_sound("fake_path.wav")
@@ -37,6 +38,7 @@ def test_cleanup_finished_sounds_removes_stopped_sounds():
     assert stopped_sound not in sound._active_sounds
     
 def test_play_looping_sound_returns_stop_callback():
+    # Make sure the looping sound gives a valid callback
     mock_sound = MagicMock()
 
     with patch("sound.QSoundEffect", return_value=mock_sound), \
