@@ -57,11 +57,10 @@ jobs:
           mv htmlcov sites/
           mv coverage.xml sites/
 
-      - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: coverage-artifacts
-          path: ./sites/
+          path: ./htmlcov
 
       - name: deploy the artifacts
         uses: actions/deploy-pages@v4
