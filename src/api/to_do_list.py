@@ -25,3 +25,16 @@ class ToDoListAPI:
     def add_item(self, item: To_Do_Item) -> None:
         # Add the provided item to the database
         DatabaseService.insert(table_name="to_do_list", values={"description": item.description, "due_date" : item.due_date, "include_calendar_item" : item.include_calendar_item})
+        if item.include_calendar_item:
+            DatabaseService.insert(table_name="calendar", values=self.get_calendar_init_format(item))
+
+    def get_calendar_init_format(self, item: To_Do_Item):
+        return {
+            "calendar_item_id": item.taskID,
+            "datetime": item.due_date,
+            "event_name": item.description.split()[0].title(),
+            "event_description": item.description,
+            "duration": 1,
+            "include_to_do_task": False,
+            "has_reminder": False,
+        }
