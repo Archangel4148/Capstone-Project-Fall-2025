@@ -1,5 +1,6 @@
 import sys
 import os
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -26,3 +27,11 @@ def temp_db(tmp_path_factory):
     except PermissionError:
         raise ValueError(f"Could not delete {db_file}, it may still be in use.")
     DatabaseService.DB_PATH = original_path
+
+@pytest.fixture(autouse=True)
+def mock_notifications():
+    """Automatically mock notifypy.Notify so real notifications aren't sent in tests."""
+    with patch("notifications.Notify", autospec=True) as mock_notify_cls:
+        mock_notify_instance = MagicMock()
+        mock_notify_cls.return_value = mock_notify_instance
+        yield mock_notify_instance
