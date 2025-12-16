@@ -1,4 +1,4 @@
-name: CI
+name: CD
 
 on:
   push:
@@ -50,12 +50,6 @@ jobs:
             --cov-report=term \
             --cov-report=xml \
             --cov-report=html \
-
-      - name: Prepare the webpage
-        run: |
-          mkdir sites
-          mv htmlcov sites/
-          mv coverage.xml sites/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
